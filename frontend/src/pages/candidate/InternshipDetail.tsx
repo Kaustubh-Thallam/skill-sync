@@ -70,6 +70,7 @@ const InternshipDetail = () => {
   const [rankLoading, setRankLoading] = useState(false);
   const [applied, setApplied] = useState(false);
   const [applying, setApplying] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     const fetchPosting = async () => {
@@ -77,7 +78,8 @@ const InternshipDetail = () => {
         const { data: res } = await api.get(`/postings/${id}`);
         setData(res.posting);
       } catch {
-        toast.error("Failed to load internship details.");
+        setNotFound(true);
+        toast.error("Internship not found.");
       } finally {
         setLoading(false);
       }
@@ -132,11 +134,33 @@ const InternshipDetail = () => {
     }
   };
 
-  if (loading || !data) {
+  if (loading) {
     return (
       <DashboardLayout role="candidate">
         <div className="flex items-center justify-center h-64">
           <Loader2 className="h-8 w-8 animate-spin text-retro-olive" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (notFound || !data) {
+    return (
+      <DashboardLayout role="candidate">
+        <div className="flex flex-col items-center justify-center h-64 space-y-4 animate-fade-in">
+          <XCircle className="h-12 w-12 text-retro-orange" />
+          <h2 className="text-xl font-bold font-heading text-retro-charcoal">
+            Internship Not Found
+          </h2>
+          <p className="text-retro-brown text-sm">
+            The internship you're looking for doesn't exist or has been removed.
+          </p>
+          <Link
+            to="/internships"
+            className="inline-flex items-center gap-1.5 text-sm text-retro-olive hover:text-retro-charcoal font-medium transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back to Internships
+          </Link>
         </div>
       </DashboardLayout>
     );

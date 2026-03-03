@@ -24,6 +24,7 @@ import {
   Plus,
   Bell,
   Loader2,
+  XCircle,
 } from "lucide-react";
 import api from "@/api/axios";
 
@@ -67,6 +68,7 @@ const ManageInternship = () => {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<PostingData | null>(null);
+  const [notFound, setNotFound] = useState(false);
 
   // Edit form state
   const [editTitle, setEditTitle] = useState("");
@@ -109,7 +111,8 @@ const ManageInternship = () => {
         setEditDeadline(p.deadline?.split("T")[0] || "");
         setRemote(p.remote);
       } catch {
-        toast.error("Failed to load internship.");
+        setNotFound(true);
+        toast.error("Internship not found.");
       } finally {
         setLoading(false);
       }
@@ -201,11 +204,33 @@ const ManageInternship = () => {
     }
   };
 
-  if (loading || !data) {
+  if (loading) {
     return (
       <DashboardLayout role="recruiter">
         <div className="flex items-center justify-center h-64">
           <Loader2 className="h-8 w-8 animate-spin text-retro-olive" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (notFound || !data) {
+    return (
+      <DashboardLayout role="recruiter">
+        <div className="flex flex-col items-center justify-center h-64 space-y-4 animate-fade-in">
+          <XCircle className="h-12 w-12 text-retro-orange" />
+          <h2 className="text-xl font-bold font-heading text-retro-charcoal">
+            Internship Not Found
+          </h2>
+          <p className="text-retro-brown text-sm">
+            This posting doesn't exist or has been removed.
+          </p>
+          <Link
+            to="/dashboard/recruiter"
+            className="inline-flex items-center gap-1.5 text-sm text-retro-olive hover:text-retro-charcoal font-medium transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back to Dashboard
+          </Link>
         </div>
       </DashboardLayout>
     );
