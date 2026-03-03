@@ -58,6 +58,9 @@ function AppSidebar({ role }: { role: "candidate" | "recruiter" }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const dashboardUrl =
+    role === "candidate" ? "/dashboard/candidate" : "/dashboard/recruiter";
+
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -68,10 +71,16 @@ function AppSidebar({ role }: { role: "candidate" | "recruiter" }) {
       collapsible="icon"
       className="border-r border-retro-charcoal/8 sidebar-retro"
     >
-      <div className="flex h-14 items-center px-4 border-b border-white/8">
+      {/* Logo header — clickable, navigates to dashboard */}
+      <div
+        className="flex h-14 items-center px-1 border-b border-white/8 cursor-pointer overflow-hidden"
+        onClick={() => navigate(dashboardUrl)}
+        title="Go to Dashboard"
+      >
         <Logo collapsed={collapsed} />
       </div>
-      <SidebarContent className="pt-4 flex flex-col flex-1">
+
+      <SidebarContent className="pt-4 flex flex-col flex-1 overflow-hidden">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -84,9 +93,9 @@ function AppSidebar({ role }: { role: "candidate" | "recruiter" }) {
                       className="hover:bg-white/8 rounded-xl transition-all duration-200"
                       activeClassName="bg-white/10 text-retro-gold font-semibold border-l-2 border-retro-gold"
                     >
-                      <item.icon className="mr-2 h-4 w-4 shrink-0" />
+                      <item.icon className="h-4 w-4 shrink-0" />
                       {!collapsed && (
-                        <span className="tracking-wide text-sm">
+                        <span className="tracking-wide text-sm ml-2">
                           {item.title}
                         </span>
                       )}
@@ -98,21 +107,25 @@ function AppSidebar({ role }: { role: "candidate" | "recruiter" }) {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* User dropdown */}
-        <div className="mt-auto border-t border-white/8 p-3">
+        {/* User dropdown — fixed at bottom of sidebar */}
+        <div className="mt-auto border-t border-white/8 p-2">
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-2 w-full hover:bg-white/8 rounded-xl p-2 transition-all duration-200">
+            <DropdownMenuTrigger
+              className={`flex items-center w-full hover:bg-white/8 rounded-xl p-2 transition-all duration-200 overflow-hidden ${collapsed ? "justify-center gap-0" : "gap-2"}`}
+            >
+              {/* Avatar circle */}
               <div className="h-8 w-8 bg-retro-gold rounded-full flex items-center justify-center shrink-0">
                 <span className="text-xs font-bold text-retro-charcoal">
                   {user?.fullName?.[0]?.toUpperCase() || "U"}
                 </span>
               </div>
+              {/* Name + chevron only when expanded */}
               {!collapsed && (
                 <>
-                  <span className="text-sm font-medium truncate flex-1 text-left text-sidebar-foreground">
+                  <span className="text-sm font-medium truncate flex-1 text-left text-sidebar-foreground min-w-0">
                     {user?.fullName || "User"}
                   </span>
-                  <ChevronUp className="h-4 w-4 text-sidebar-foreground/60 shrink-0" />
+                  <ChevronUp className="h-4 w-4 text-sidebar-foreground/60 shrink-0 ml-auto" />
                 </>
               )}
             </DropdownMenuTrigger>

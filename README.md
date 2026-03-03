@@ -49,7 +49,7 @@ Traditional internship and project allocation systems rely on keyword matching a
 │  (port 5000)           │
 │  9 route modules       │
 └────────┬───────────────┘
-         │ Internal HTTP          ┌──────────────┐
+         │ Internal HTTP          ┌───────────────┐
          ▼                        │  PostgreSQL   │
 ┌────────────────────────┐        │  (10 models)  │
 │  Python / FastAPI      │        └───────▲───────┘

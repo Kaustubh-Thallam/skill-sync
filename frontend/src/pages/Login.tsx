@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import Logo from "@/components/Logo";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 
 const Login = () => {
   const { login, isAuthenticated, user } = useAuth();
@@ -46,81 +46,92 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-retro-beige paper-texture flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-8 animate-fade-in">
-        <div className="text-center">
-          <div className="flex justify-center mb-6">
-            <Logo />
+    <>
+      {/* Back to home — outside paper-texture so `fixed` is not overridden */}
+      <button
+        onClick={() => navigate("/")}
+        className="fixed top-5 left-5 z-50 flex items-center gap-1.5 text-sm text-retro-brown hover:text-retro-charcoal font-medium transition-colors bg-retro-beige/80 backdrop-blur-sm px-3 py-1.5 rounded-lg"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to Home
+      </button>
+
+      <div className="min-h-screen bg-retro-beige paper-texture flex items-center justify-center p-4">
+        <div className="w-full max-w-md space-y-8 animate-fade-in">
+          <div className="text-center">
+            <div className="flex justify-center mb-6">
+              <Logo />
+            </div>
+            <h1 className="text-2xl font-bold font-heading text-retro-charcoal">
+              Welcome Back
+            </h1>
+            <p className="text-retro-brown text-sm mt-1">
+              Sign in to your SkillSync account
+            </p>
           </div>
-          <h1 className="text-2xl font-bold font-heading text-retro-charcoal">
-            Welcome Back
-          </h1>
-          <p className="text-retro-brown text-sm mt-1">
-            Sign in to your account
-          </p>
-        </div>
-        <form
-          onSubmit={handleLogin}
-          className="polished-card-static p-8 space-y-5"
-        >
-          <div className="space-y-2">
-            <label
-              htmlFor="login-email"
-              className="text-sm font-medium text-retro-charcoal"
-            >
-              Email
-            </label>
-            <Input
-              id="login-email"
-              type="email"
-              required
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <label
-              htmlFor="login-password"
-              className="text-sm font-medium text-retro-charcoal"
-            >
-              Password
-            </label>
-            <Input
-              id="login-password"
-              type="password"
-              required
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <Button
-            type="submit"
-            className="w-full btn-gold rounded-xl"
-            size="lg"
-            disabled={loading}
+          <form
+            onSubmit={handleLogin}
+            className="polished-card-static p-8 space-y-5"
           >
-            {loading ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Signing in…
-              </>
-            ) : (
-              "Sign In"
-            )}
-          </Button>
-          <p className="text-center text-sm text-retro-brown">
-            Don't have an account?{" "}
-            <Link
-              to="/signup"
-              className="text-retro-olive font-semibold hover:underline"
+            <div className="space-y-2">
+              <label
+                htmlFor="login-email"
+                className="text-sm font-medium text-retro-charcoal"
+              >
+                Email Address
+              </label>
+              <Input
+                id="login-email"
+                type="email"
+                required
+                placeholder="Enter your registered email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <label
+                htmlFor="login-password"
+                className="text-sm font-medium text-retro-charcoal"
+              >
+                Password
+              </label>
+              <Input
+                id="login-password"
+                type="password"
+                required
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <Button
+              type="submit"
+              className="w-full btn-gold rounded-xl"
+              size="lg"
+              disabled={loading}
             >
-              Sign up
-            </Link>
-          </p>
-        </form>
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Signing in…
+                </>
+              ) : (
+                "Sign In"
+              )}
+            </Button>
+            <p className="text-center text-sm text-retro-brown">
+              Don't have an account?{" "}
+              <Link
+                to="/signup"
+                className="text-retro-olive font-semibold hover:underline"
+              >
+                Sign up
+              </Link>
+            </p>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

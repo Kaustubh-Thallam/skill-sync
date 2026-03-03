@@ -235,7 +235,7 @@ const CandidateProfile = () => {
 
   return (
     <DashboardLayout role="candidate">
-      <div className="max-w-3xl animate-fade-in space-y-6">
+      <div className="max-w-3xl mx-auto animate-fade-in space-y-6">
         <Link
           to="/dashboard/candidate"
           className="inline-flex items-center gap-1 text-sm text-retro-brown hover:text-retro-charcoal font-medium transition-colors"
@@ -728,6 +728,28 @@ const CandidateProfile = () => {
             <Trash className="h-4 w-4" /> Delete Account
           </Button>
         </div>
+
+        {/* Bottom Save / Cancel row — visible only in edit mode */}
+        {editing && (
+          <div className="polished-card-static p-4 flex items-center justify-end gap-3">
+            <Button variant="outline" onClick={handleCancel} disabled={saving}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSave}
+              disabled={saving}
+              className="gap-2 btn-gold rounded-xl"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" /> Saving…
+                </>
+              ) : (
+                "Save Changes"
+              )}
+            </Button>
+          </div>
+        )}
 
         <ConfirmationModal
           open={deleteOpen}
