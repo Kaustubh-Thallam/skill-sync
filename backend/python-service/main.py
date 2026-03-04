@@ -455,12 +455,6 @@ def _extract_education(sections: dict[str, str]) -> list[dict]:
 
     return education[:5]
 
-
-@app.get("/health")
-def health_check():
-    return {"status": "ok", "service": "skillbridge-python", "spacy_model": "en_core_web_md"}
-
-
 @app.post("/parse-resume")
 async def parse_resume(file: UploadFile = File(...)):
     if not file.filename.lower().endswith(".pdf"):
@@ -626,6 +620,11 @@ async def calculate_score(req: ScoreRequest):
         "score": score, "breakdown": breakdown, "gaps": gaps,
         "projectedScore": projected_score, "earned": earned, "maxPossible": max_possible,
     }
+
+
+@app.api_route("/health", methods=["GET", "HEAD"])
+async def health():
+    return {"status": "healthy"}
 
 
 if __name__ == "__main__":

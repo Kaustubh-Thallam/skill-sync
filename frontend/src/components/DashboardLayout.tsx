@@ -25,6 +25,8 @@ import {
   ChevronUp,
   User,
   LogOut,
+  Users,
+  Shield,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -35,7 +37,7 @@ import {
 
 interface DashboardLayoutProps {
   children: ReactNode;
-  role: "candidate" | "recruiter";
+  role: "candidate" | "recruiter" | "admin";
 }
 
 const candidateLinks = [
@@ -51,15 +53,32 @@ const recruiterLinks = [
   { title: "Post Project", url: "/post/project", icon: PlusCircle },
 ];
 
-function AppSidebar({ role }: { role: "candidate" | "recruiter" }) {
+const adminLinks = [
+  { title: "Dashboard", url: "/dashboard/admin", icon: LayoutDashboard },
+  { title: "Users", url: "/admin/users", icon: Users },
+  { title: "Recruiters", url: "/admin/recruiters", icon: Briefcase },
+  { title: "Postings", url: "/admin/postings", icon: FolderKanban },
+  { title: "Admins", url: "/admin/manage", icon: Shield },
+];
+
+function AppSidebar({ role }: { role: "candidate" | "recruiter" | "admin" }) {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
-  const links = role === "candidate" ? candidateLinks : recruiterLinks;
+  const links =
+    role === "candidate"
+      ? candidateLinks
+      : role === "recruiter"
+        ? recruiterLinks
+        : adminLinks;
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const dashboardUrl =
-    role === "candidate" ? "/dashboard/candidate" : "/dashboard/recruiter";
+    role === "candidate"
+      ? "/dashboard/candidate"
+      : role === "recruiter"
+        ? "/dashboard/recruiter"
+        : "/dashboard/admin";
 
   const handleLogout = () => {
     logout();
@@ -148,6 +167,14 @@ function AppSidebar({ role }: { role: "candidate" | "recruiter" }) {
                   className="gap-2 cursor-pointer rounded-lg"
                 >
                   <User className="h-4 w-4" /> Profile
+                </DropdownMenuItem>
+              )}
+              {role === "admin" && (
+                <DropdownMenuItem
+                  onClick={() => navigate("/admin/profile")}
+                  className="gap-2 cursor-pointer rounded-lg"
+                >
+                  <User className="h-4 w-4" /> My Profile
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem

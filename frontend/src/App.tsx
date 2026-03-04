@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import ScrollToTop from "@/components/ScrollToTop";
 
 // Public pages
 import Landing from "@/pages/Landing";
@@ -31,6 +32,15 @@ import ManageInternship from "@/pages/recruiter/ManageInternship";
 import ManageProject from "@/pages/recruiter/ManageProject";
 import RecruiterProfile from "@/pages/recruiter/RecruiterProfile";
 
+// Admin pages
+import AdminDashboard from "@/pages/admin/AdminDashboard";
+import AdminUsers from "@/pages/admin/AdminUsers";
+import AdminRecruiters from "@/pages/admin/AdminRecruiters";
+import AdminPostings from "@/pages/admin/AdminPostings";
+import AdminManageAdmins from "@/pages/admin/AdminManageAdmins";
+import AdminEditUser from "@/pages/admin/AdminEditUser";
+import AdminProfile from "@/pages/admin/AdminProfile";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -39,6 +49,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <AuthProvider>
           <Routes>
             {/* Public Routes */}
@@ -166,6 +177,64 @@ const App = () => (
               element={
                 <ProtectedRoute allowedRole="recruiter">
                   <RecruiterProfile />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Admin Protected Routes */}
+            <Route
+              path="/dashboard/admin"
+              element={
+                <ProtectedRoute allowedRole="admin">
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute allowedRole="admin">
+                  <AdminUsers />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/recruiters"
+              element={
+                <ProtectedRoute allowedRole="admin">
+                  <AdminRecruiters />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/postings"
+              element={
+                <ProtectedRoute allowedRole="admin">
+                  <AdminPostings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/manage"
+              element={
+                <ProtectedRoute allowedRole="admin">
+                  <AdminManageAdmins />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/edit/:id"
+              element={
+                <ProtectedRoute allowedRole="admin">
+                  <AdminEditUser />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/profile"
+              element={
+                <ProtectedRoute allowedRole="admin">
+                  <AdminProfile />
                 </ProtectedRoute>
               }
             />

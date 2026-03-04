@@ -23,6 +23,16 @@ Traditional internship and project allocation systems rely on keyword matching a
 
 ---
 
+## 🌐 Live Demo
+
+> **The application is live and deployed at:**
+>
+> ### 🔗 [https://skill-sync-nine.vercel.app/](https://skill-sync-nine.vercel.app/)
+>
+> Visit the link above to explore SkillSync in action. You can create an account and use the platform freely for **personal or testing purposes**.
+
+---
+
 ## ✨ Key Features
 
 | For Candidates                         | For Recruiters                       |

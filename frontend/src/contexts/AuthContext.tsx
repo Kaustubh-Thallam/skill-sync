@@ -5,7 +5,8 @@ interface User {
   id: string;
   fullName: string;
   email: string;
-  userType: "candidate" | "recruiter";
+  userType: "candidate" | "recruiter" | "admin";
+  onboarded: boolean;
 }
 
 interface AuthContextType {
@@ -21,6 +22,7 @@ interface AuthContextType {
   ) => Promise<void>;
   logout: () => void;
   updateUserName: (name: string) => void;
+  updateOnboarded: (val: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,8 +34,8 @@ export const useAuth = () => {
 };
 
 /** Map backend role (CANDIDATE/RECRUITER) to frontend userType */
-function mapRole(role: string): "candidate" | "recruiter" {
-  return role.toLowerCase() as "candidate" | "recruiter";
+function mapRole(role: string): "candidate" | "recruiter" | "admin" {
+  return role.toLowerCase() as "candidate" | "recruiter" | "admin";
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -54,6 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       fullName: data.user.displayName || data.user.email.split("@")[0],
       email: data.user.email,
       userType: mapRole(data.user.role),
+      onboarded: data.user.onboarded ?? true,
     };
     setUser(mappedUser);
     setToken(data.token);
@@ -74,6 +77,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       fullName,
       email: data.user.email,
       userType: mapRole(data.user.role),
+      onboarded: false,
     };
     setUser(mappedUser);
     setToken(data.token);
@@ -98,6 +102,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  /** Mark the user as onboarded (called after completing onboarding) */
+  const updateOnboarded = (val: boolean) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, onboarded: val };
+      localStorage.setItem("user", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -108,6 +122,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signup,
         logout,
         updateUserName,
+        updateOnboarded,
       }}
     >
       {children}

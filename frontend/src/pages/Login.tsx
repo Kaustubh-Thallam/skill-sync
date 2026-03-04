@@ -17,9 +17,11 @@ const Login = () => {
   // Redirect if already logged in
   if (isAuthenticated && user) {
     const dashPath =
-      user.userType === "recruiter"
-        ? "/dashboard/recruiter"
-        : "/dashboard/candidate";
+      user.userType === "admin"
+        ? "/dashboard/admin"
+        : user.userType === "recruiter"
+          ? "/dashboard/recruiter"
+          : "/dashboard/candidate";
     return <Navigate to={dashPath} replace />;
   }
 
@@ -30,7 +32,9 @@ const Login = () => {
       await login(email, password);
       const stored = localStorage.getItem("user");
       const u = stored ? JSON.parse(stored) : null;
-      if (u?.userType === "recruiter") {
+      if (u?.userType === "admin") {
+        navigate("/dashboard/admin");
+      } else if (u?.userType === "recruiter") {
         navigate("/dashboard/recruiter");
       } else {
         navigate("/dashboard/candidate");
@@ -49,7 +53,7 @@ const Login = () => {
     <>
       {/* Back to home — outside paper-texture so `fixed` is not overridden */}
       <button
-        onClick={() => navigate("/")}
+        onClick={() => navigate("/#root")}
         className="fixed top-5 left-5 z-50 flex items-center gap-1.5 text-sm text-retro-brown hover:text-retro-charcoal font-medium transition-colors bg-retro-beige/80 backdrop-blur-sm px-3 py-1.5 rounded-lg"
       >
         <ArrowLeft className="h-4 w-4" />

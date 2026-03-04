@@ -17,7 +17,7 @@ import api from "@/api/axios";
 
 const RecruiterOnboarding = () => {
   const navigate = useNavigate();
-  const { updateUserName } = useAuth();
+  const { updateUserName, updateOnboarded } = useAuth();
   const [companyName, setCompanyName] = useState("");
   const [companySize, setCompanySize] = useState("");
   const [saving, setSaving] = useState(false);
@@ -28,6 +28,7 @@ const RecruiterOnboarding = () => {
     try {
       await api.put("/recruiters/onboarding", { companyName, companySize });
       updateUserName(companyName);
+      updateOnboarded(true);
       toast.success("Welcome aboard! Your account is set up.");
       navigate("/dashboard/recruiter");
     } catch (err: any) {

@@ -30,13 +30,15 @@ app.use(
 app.use(express.json({ limit: "10mb" }));
 
 // ─── Health Check ───
-app.get("/health", (req, res) => {
+const healthHandler = (req, res) => {
   res.json({
     status: "ok",
     service: "skillsync-node",
     timestamp: new Date().toISOString(),
   });
-});
+};
+app.get("/health", healthHandler);
+app.head("/health", healthHandler);
 
 // ─── Route Imports ───
 const authRoutes = require("./routes/auth");
@@ -48,6 +50,7 @@ const applicationRoutes = require("./routes/applications");
 const rankingRoutes = require("./routes/rankings");
 const notificationRoutes = require("./routes/notifications");
 const recommendationRoutes = require("./routes/recommendations");
+const adminRoutes = require("./routes/admin");
 
 // ─── Route Registration ───
 app.use("/auth", authRoutes);
@@ -59,6 +62,7 @@ app.use("/applications", applicationRoutes);
 app.use("/rankings", rankingRoutes);
 app.use("/notifications", notificationRoutes);
 app.use("/candidates/recommendations", recommendationRoutes);
+app.use("/admin", adminRoutes);
 
 // ─── 404 Handler ───
 app.use((req, res) => {

@@ -51,7 +51,7 @@ const steps = [
 
 const CandidateOnboarding = () => {
   const navigate = useNavigate();
-  const { user, updateUserName } = useAuth();
+  const { user, updateUserName, updateOnboarded } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [mode, setMode] = useState<"select" | "manual" | "resume" | "clarify">(
@@ -124,10 +124,14 @@ const CandidateOnboarding = () => {
         newErrors.location = "This field is mandatory.";
     }
     if (step === 1) {
+      // Skills are optional — if user filled some, validate they're complete
       const validSkills = skills.filter((s) => s.name.trim() && s.proficiency);
-      if (validSkills.length === 0)
+      const partialSkills = skills.filter(
+        (s) => s.name.trim() && !s.proficiency,
+      );
+      if (partialSkills.length > 0)
         newErrors.skills =
-          "Please add at least one skill with a proficiency level.";
+          "Please set proficiency for all skills, or remove incomplete ones.";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -224,6 +228,8 @@ const CandidateOnboarding = () => {
         err.response?.data?.error ||
           "Failed to parse resume. Try manual entry.",
       );
+      // Reset file input so re-upload works
+      if (fileInputRef.current) fileInputRef.current.value = "";
     } finally {
       setUploading(false);
     }
@@ -239,11 +245,6 @@ const CandidateOnboarding = () => {
     expData?: Experience[],
   ) => {
     const validSkills = allSkills.filter((s) => s.name.trim() && s.proficiency);
-    if (validSkills.length === 0) {
-      toast.error("No skills detected. Please enter manually.");
-      setMode("manual");
-      return;
-    }
     setSaving(true);
     try {
       // Sanitize linkedin: must be a valid URL or null/empty
@@ -282,6 +283,7 @@ const CandidateOnboarding = () => {
         experience: validExperience,
       });
       updateUserName((name || "User").trim());
+      updateOnboarded(true);
       toast.success("Profile setup complete!");
       navigate("/dashboard/candidate");
     } catch (err: any) {
@@ -302,11 +304,6 @@ const CandidateOnboarding = () => {
 
   const handleFinish = async () => {
     const validSkills = skills.filter((s) => s.name.trim() && s.proficiency);
-    if (validSkills.length === 0) {
-      toast.error("Please add at least one skill with a proficiency level.");
-      setCurrentStep(1);
-      return;
-    }
     await finishOnboarding(
       personal.fullName,
       personal.phone,
@@ -519,6 +516,20 @@ const CandidateOnboarding = () => {
           Complete Your Profile
         </h1>
 
+        {/* Back to selection */}
+        <div className="text-center">
+          <Button
+            variant="link"
+            className="text-sm text-muted-foreground"
+            onClick={() => {
+              setMode("select");
+              setCurrentStep(0);
+            }}
+          >
+            ← Back to Upload Resume option
+          </Button>
+        </div>
+
         {/* Progress stepper */}
         <div className="flex items-center justify-center gap-2 mb-8">
           {steps.map((step, i) => (
@@ -689,19 +700,27 @@ const CandidateOnboarding = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                {skills.length > 1 && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => removeSkill(i)}
-                    className="text-destructive shrink-0"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => removeSkill(i)}
+                  className="text-destructive shrink-0"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
             ))}
+            <button
+              type="button"
+              onClick={() => {
+                setSkills([]);
+                setCurrentStep(2);
+              }}
+              className="w-full text-sm text-muted-foreground hover:text-retro-charcoal py-2 border border-dashed border-border rounded-lg transition-colors"
+            >
+              I don't have any skills yet — Skip this step
+            </button>
             <div className="flex gap-3">
               <Button
                 variant="outline"

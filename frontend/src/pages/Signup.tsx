@@ -181,7 +181,7 @@ const Signup = () => {
                 </label>
                 <Input
                   required
-                  placeholder="e.g. Kaustubh Thallam"
+                  placeholder="e.g. John Doe"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                 />

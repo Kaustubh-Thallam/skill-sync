@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -56,6 +56,14 @@ const CandidateProfile = () => {
   const [saving, setSaving] = useState(false);
   const [resumeUploading, setResumeUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Snapshot of original data for cancel restoration
+  const originalStateRef = useRef<{
+    personal: typeof personal;
+    skills: { name: string; proficiency: string }[];
+    projects: Project[];
+    experiences: Experience[];
+  } | null>(null);
 
   const [personal, setPersonal] = useState({
     fullName: "",
@@ -153,7 +161,17 @@ const CandidateProfile = () => {
     }
   };
 
-  const handleCancel = () => setEditing(false);
+  const handleCancel = useCallback(() => {
+    // Restore original data from snapshot
+    if (originalStateRef.current) {
+      setPersonal(originalStateRef.current.personal);
+      setSkills(originalStateRef.current.skills);
+      setProjects(originalStateRef.current.projects);
+      setExperiences(originalStateRef.current.experiences);
+      originalStateRef.current = null;
+    }
+    setEditing(false);
+  }, []);
 
   const handleResumeUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -220,7 +238,7 @@ const CandidateProfile = () => {
       await api.delete("/auth/account");
       toast.success("Account deleted successfully.");
       logout();
-      navigate("/");
+      navigate("/#root");
     } catch (err: any) {
       toast.error(err.response?.data?.error || "Failed to delete account.");
     }
@@ -249,7 +267,19 @@ const CandidateProfile = () => {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold font-heading">My Profile</h1>
           {!editing ? (
-            <Button onClick={() => setEditing(true)} className="gap-2">
+            <Button
+              onClick={() => {
+                // Snapshot current state before editing
+                originalStateRef.current = {
+                  personal: { ...personal },
+                  skills: skills.map((s) => ({ ...s })),
+                  projects: projects.map((p) => ({ ...p })),
+                  experiences: experiences.map((e) => ({ ...e })),
+                };
+                setEditing(true);
+              }}
+              className="gap-2"
+            >
               <Pencil className="h-4 w-4" /> Edit
             </Button>
           ) : (
@@ -438,19 +468,17 @@ const CandidateProfile = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                {skills.length > 1 && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() =>
-                      setSkills(skills.filter((_, idx) => idx !== i))
-                    }
-                    className="text-destructive shrink-0"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() =>
+                    setSkills(skills.filter((_, idx) => idx !== i))
+                  }
+                  className="text-destructive shrink-0"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
             ))
           ) : (

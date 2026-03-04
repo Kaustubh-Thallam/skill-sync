@@ -34,7 +34,7 @@ const onboardingSchema = z.object({
         proficiency: z.number().int().min(1).max(5),
       }),
     )
-    .min(1, "At least one skill is required"),
+    .min(0, "Skills array is required"),
   projects: z
     .array(
       z.object({
