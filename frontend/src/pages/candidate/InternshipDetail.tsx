@@ -256,7 +256,7 @@ const InternshipDetail = () => {
                 ) : (
                   <XCircle className="h-4 w-4" />
                 )}{" "}
-                {percentage}%
+                {Number(percentage).toFixed(2)}%
               </div>
             </div>
             <div className="overflow-x-auto">
@@ -331,8 +331,8 @@ const InternshipDetail = () => {
                   <XCircle className="h-5 w-5" /> Not eligible — need 80%.
                 </div>
                 <p className="text-sm text-retro-brown">
-                  Current: <strong>{percentage}%</strong>. Need{" "}
-                  <strong>{80 - percentage}%</strong> more.
+                  Current: <strong>{Number(percentage).toFixed(2)}%</strong>.
+                  Need <strong>{(80 - percentage).toFixed(2)}%</strong> more.
                 </p>
                 {scoreData.gaps.length > 0 && (
                   <div className="space-y-2">
@@ -386,7 +386,7 @@ const InternshipDetail = () => {
                       <span
                         className={`tag ${c.score >= 80 ? "tag-olive" : ""}`}
                       >
-                        {c.score}%
+                        {Number(c.score).toFixed(2)}%
                       </span>
                     </td>
                     <td className="py-3 text-center">

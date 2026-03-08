@@ -339,7 +339,7 @@ const ManageProject = () => {
                         <span
                           className={`px-2 py-0.5 rounded-full text-xs font-bold ${c.score >= 80 ? "bg-success text-success-foreground" : c.score >= 50 ? "bg-warning text-warning-foreground" : "bg-destructive text-destructive-foreground"}`}
                         >
-                          {c.score}%
+                          {Number(c.score).toFixed(2)}%
                         </span>
                       </td>
                       <td className="py-2 text-center">
@@ -403,7 +403,7 @@ const ManageProject = () => {
                         <span
                           className={`px-2 py-0.5 rounded-full text-xs font-bold ${c.score >= 80 ? "bg-success text-success-foreground" : "bg-warning text-warning-foreground"}`}
                         >
-                          {c.score}%
+                          {Number(c.score).toFixed(2)}%
                         </span>
                       </td>
                       <td className="py-2 text-center">

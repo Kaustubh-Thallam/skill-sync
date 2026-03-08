@@ -6,14 +6,22 @@ interface MatchScoreRingProps {
   strokeWidth?: number;
 }
 
-const MatchScoreRing = ({ score, size = 120, strokeWidth = 8 }: MatchScoreRingProps) => {
+const MatchScoreRing = ({
+  score,
+  size = 120,
+  strokeWidth = 8,
+}: MatchScoreRingProps) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
   const circleRef = useRef<SVGCircleElement>(null);
 
   const color =
-    score >= 80 ? "hsl(var(--success))" : score >= 50 ? "hsl(var(--warning))" : "hsl(var(--destructive))";
+    score >= 80
+      ? "hsl(var(--success))"
+      : score >= 50
+        ? "hsl(var(--warning))"
+        : "hsl(var(--destructive))";
 
   useEffect(() => {
     if (circleRef.current) {
@@ -50,7 +58,9 @@ const MatchScoreRing = ({ score, size = 120, strokeWidth = 8 }: MatchScoreRingPr
           strokeLinecap="round"
         />
       </svg>
-      <span className="absolute text-2xl font-bold font-heading">{score}%</span>
+      <span className="absolute text-2xl font-bold font-heading">
+        {Number(score).toFixed(2)}%
+      </span>
     </div>
   );
 };
