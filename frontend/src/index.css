@@ -442,4 +442,32 @@
     border: 1.5px solid rgba(217, 119, 6, 0.2);
     border-radius: 14px;
   }
+
+  /* ─── Mobile responsive adjustments ─── */
+  @media (max-width: 639px) {
+    .polished-card,
+    .polished-card-static {
+      border-radius: 14px;
+      padding: 1rem;
+    }
+
+    .polished-card:hover {
+      transform: none;
+    }
+
+    .stat-box {
+      padding: 1rem;
+      border-radius: 12px;
+    }
+
+    .stamp {
+      font-size: 0.75rem;
+      padding: 0.3rem 0.7rem;
+    }
+
+    .tag {
+      font-size: 0.625rem;
+      padding: 0.2rem 0.5rem;
+    }
+  }
 }

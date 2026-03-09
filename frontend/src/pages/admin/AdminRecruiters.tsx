@@ -102,77 +102,79 @@ const AdminRecruiters = () => {
         </div>
 
         <div className="polished-card-static overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-retro-charcoal/5 border-b">
-              <tr>
-                <th className="text-left p-3 font-medium">Company</th>
-                <th className="text-left p-3 font-medium">Email</th>
-                <th className="text-left p-3 font-medium">Postings</th>
-                <th className="text-left p-3 font-medium">Onboarded</th>
-                <th className="text-right p-3 font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((u) => (
-                <tr
-                  key={u.id}
-                  className="border-b last:border-0 hover:bg-retro-beige/50"
-                >
-                  <td className="p-3 font-medium">
-                    {u.recruiterProfile?.companyName || "—"}
-                  </td>
-                  <td className="p-3 text-muted-foreground">{u.email}</td>
-                  <td className="p-3">
-                    {u.recruiterProfile?.postings?.length || 0}
-                  </td>
-                  <td className="p-3">
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded-full ${u.recruiterProfile?.onboarded ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}
-                    >
-                      {u.recruiterProfile?.onboarded ? "Yes" : "No"}
-                    </span>
-                  </td>
-                  <td className="p-3 text-right space-x-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      title="Edit Profile"
-                      onClick={() => navigate(`/admin/edit/${u.id}`)}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      title="Change Password"
-                      onClick={() => setPasswordTarget(u.id)}
-                    >
-                      <Key className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-destructive"
-                      title="Delete"
-                      onClick={() => setDeleteTarget(u.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-              {filtered.length === 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[640px]">
+              <thead className="bg-retro-charcoal/5 border-b">
                 <tr>
-                  <td
-                    colSpan={5}
-                    className="p-6 text-center text-muted-foreground"
-                  >
-                    No recruiters found.
-                  </td>
+                  <th className="text-left p-3 font-medium">Company</th>
+                  <th className="text-left p-3 font-medium">Email</th>
+                  <th className="text-left p-3 font-medium">Postings</th>
+                  <th className="text-left p-3 font-medium">Onboarded</th>
+                  <th className="text-right p-3 font-medium">Actions</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filtered.map((u) => (
+                  <tr
+                    key={u.id}
+                    className="border-b last:border-0 hover:bg-retro-beige/50"
+                  >
+                    <td className="p-3 font-medium">
+                      {u.recruiterProfile?.companyName || "—"}
+                    </td>
+                    <td className="p-3 text-muted-foreground">{u.email}</td>
+                    <td className="p-3">
+                      {u.recruiterProfile?.postings?.length || 0}
+                    </td>
+                    <td className="p-3">
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded-full ${u.recruiterProfile?.onboarded ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}
+                      >
+                        {u.recruiterProfile?.onboarded ? "Yes" : "No"}
+                      </span>
+                    </td>
+                    <td className="p-3 text-right space-x-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        title="Edit Profile"
+                        onClick={() => navigate(`/admin/edit/${u.id}`)}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        title="Change Password"
+                        onClick={() => setPasswordTarget(u.id)}
+                      >
+                        <Key className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-destructive"
+                        title="Delete"
+                        onClick={() => setDeleteTarget(u.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+                {filtered.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="p-6 text-center text-muted-foreground"
+                    >
+                      No recruiters found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <ConfirmationModal

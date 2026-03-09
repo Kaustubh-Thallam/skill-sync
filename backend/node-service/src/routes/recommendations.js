@@ -22,16 +22,14 @@ router.get(
     let projects = [];
 
     if (profile.skills.length === 0) {
-      const recent = await prisma.posting.findMany({
-        take: 10,
-        orderBy: { createdAt: "desc" },
-        include: {
-          postingSkills: true,
-          recruiter: { select: { companyName: true } },
-        },
+      // No skills → no recommendations (can't match without skills)
+      return res.json({
+        internships: [],
+        projects: [],
+        totalInternships: 0,
+        totalProjects: 0,
+        noSkills: true,
       });
-      internships = recent.filter((p) => p.type === "INTERNSHIP");
-      projects = recent.filter((p) => p.type === "PROJECT");
     } else {
       const skillNames = profile.skills.map((s) => s.skillName.toLowerCase());
 

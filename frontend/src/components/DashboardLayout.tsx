@@ -197,7 +197,7 @@ const DashboardLayout = ({ children, role }: DashboardLayoutProps) => {
       <div className="min-h-screen flex w-full">
         <AppSidebar role={role} />
         <div className="flex-1 flex flex-col">
-          <header className="h-14 flex items-center justify-between border-b border-retro-charcoal/8 px-5 bg-white/80 backdrop-blur-md">
+          <header className="h-14 flex items-center justify-between border-b border-retro-charcoal/8 px-3 sm:px-5 bg-white/80 backdrop-blur-md">
             <div className="flex items-center">
               <SidebarTrigger className="mr-4" />
               <span className="text-xs text-retro-brown capitalize font-mono tracking-wider uppercase">
@@ -206,7 +206,7 @@ const DashboardLayout = ({ children, role }: DashboardLayoutProps) => {
             </div>
             <NotificationDropdown />
           </header>
-          <main className="flex-1 p-6 overflow-auto bg-retro-beige">
+          <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-auto bg-retro-beige">
             {children}
           </main>
         </div>

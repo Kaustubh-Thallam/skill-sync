@@ -472,18 +472,58 @@ async def parse_resume(file: UploadFile = File(...)):
 
     doc = nlp(raw_text)
 
+    # --- Improved name/location extraction ---
+    # Only search the HEADER section (before the first section heading)
+    # This avoids false positives from project names, skills, etc.
+    first_section = SECTION_RE.search(raw_text)
+    header_end = first_section.start() if first_section else min(len(raw_text), 500)
+    header_text = raw_text[:header_end]
+    header_doc = nlp(header_text)
+
+    # Build a set of known skill names for filtering false positives
+    _skills_lower = {s.lower() for s in KNOWN_SKILLS}
+
+    # Common false positives for PERSON/GPE entities in resumes
+    _false_name_words = {
+        "cgpa", "gpa", "percentage", "objective", "summary", "resume",
+        "curriculum", "vitae", "cv", "education", "experience", "skills",
+        "projects", "certifications", "references", "contact", "address",
+        "phone", "email", "linkedin", "github", "portfolio",
+    }
+
     name = None
     location = None
     organizations = []
 
-    for ent in doc.ents:
+    for ent in header_doc.ents:
         if ent.label_ == "PERSON" and name is None:
-            name = ent.text.strip()
+            candidate_name = ent.text.strip()
+            words = candidate_name.split()
+            # Validate: 1-5 words, all alphabetic, not a skill, not a false positive
+            if (
+                1 <= len(words) <= 5
+                and all(w.isalpha() for w in words)
+                and candidate_name.lower() not in _skills_lower
+                and not any(w.lower() in _false_name_words for w in words)
+                and len(candidate_name) >= 3
+            ):
+                name = candidate_name
         elif ent.label_ == "GPE" and location is None:
-            location = ent.text.strip()
-        elif ent.label_ == "ORG":
+            candidate_loc = ent.text.strip()
+            # Validate: not a skill name, not a single character
+            if (
+                candidate_loc.lower() not in _skills_lower
+                and len(candidate_loc) >= 2
+                and not any(w.lower() in _false_name_words for w in candidate_loc.split())
+            ):
+                location = candidate_loc
+
+    # Also scan full text for ORG entities
+    for ent in doc.ents:
+        if ent.label_ == "ORG":
             organizations.append(ent.text.strip())
 
+    # --- Email / Phone / LinkedIn extraction (regex on full text) ---
     email_match = re.search(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}", raw_text)
     email = email_match.group(0) if email_match else None
 
@@ -493,7 +533,6 @@ async def parse_resume(file: UploadFile = File(...)):
     linkedin_match = re.search(r"(?:https?://)?(?:www\.)?linkedin\.com/in/[a-zA-Z0-9\-_%]+/?", raw_text)
     linkedin_url = linkedin_match.group(0) if linkedin_match else None
 
-    # --- Skill detection ---
     text_lower = raw_text.lower()
     detected_skills = []
     seen_skills = set()

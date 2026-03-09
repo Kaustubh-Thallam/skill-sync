@@ -49,9 +49,11 @@ const Signup = () => {
   // Redirect if already logged in
   if (isAuthenticated && user) {
     const dashPath =
-      user.userType === "recruiter"
-        ? "/dashboard/recruiter"
-        : "/dashboard/candidate";
+      user.userType === "admin"
+        ? "/dashboard/admin"
+        : user.userType === "recruiter"
+          ? "/dashboard/recruiter"
+          : "/dashboard/candidate";
     return <Navigate to={dashPath} replace />;
   }
 

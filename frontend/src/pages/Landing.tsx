@@ -84,9 +84,9 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-retro-beige">
       {/* Navbar */}
-      <nav className="flex items-center justify-between px-6 md:px-12 py-4 border-b border-retro-charcoal/10 bg-white/70 backdrop-blur-md sticky top-0 z-40">
+      <nav className="flex items-center justify-between px-4 sm:px-6 md:px-12 py-3 sm:py-4 border-b border-retro-charcoal/10 bg-white/70 backdrop-blur-md sticky top-0 z-40">
         <Logo />
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link to="/login">
             <Button
               variant="ghost"
@@ -110,17 +110,17 @@ const Landing = () => {
       </div>
 
       {/* Hero */}
-      <section className="paper-texture py-24 md:py-32">
-        <div className="container mx-auto px-6 text-center max-w-3xl animate-fade-in">
+      <section className="paper-texture py-16 sm:py-24 md:py-32">
+        <div className="container mx-auto px-4 sm:px-6 text-center max-w-3xl animate-fade-in">
           <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/80 border border-retro-charcoal/10 text-xs font-semibold text-retro-brown uppercase tracking-wider mb-8 shadow-soft animate-stamp-in">
             <Compass className="h-3.5 w-3.5" /> Est. 2026
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-black leading-[1.1] text-retro-charcoal tracking-tight mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-black leading-[1.1] text-retro-charcoal tracking-tight mb-6">
             Skill&#8209;Based Matching,
             <br />
             <span className="text-retro-olive italic">Fully Explained</span>
           </h1>
-          <p className="text-lg text-retro-brown max-w-xl mx-auto leading-relaxed mb-10">
+          <p className="text-base sm:text-lg text-retro-brown max-w-xl mx-auto leading-relaxed mb-8 sm:mb-10">
             We rank candidates using weighted competency scoring and
             fairness&#8209;aware algorithms — then show you exactly why.
           </p>
@@ -147,7 +147,7 @@ const Landing = () => {
 
       {/* Stats */}
       <section className="bg-retro-charcoal text-retro-cream py-10">
-        <div className="container mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div className="container mx-auto px-4 sm:px-6 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 text-center">
           {stats.map((s, i) => (
             <div
               key={s.label}
@@ -275,8 +275,8 @@ const Landing = () => {
       </section>
 
       {/* CTA */}
-      <section className="bg-retro-charcoal py-24 text-center">
-        <div className="container mx-auto px-6 max-w-2xl">
+      <section className="bg-retro-charcoal py-16 sm:py-24 text-center">
+        <div className="container mx-auto px-4 sm:px-6 max-w-2xl">
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-retro-cream mb-5">
             Ready to Get Matched?
           </h2>

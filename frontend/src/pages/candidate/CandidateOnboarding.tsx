@@ -203,24 +203,28 @@ const CandidateOnboarding = () => {
 
       setUploaded(true);
 
+      // Set uncertain skills if any
       if (uncertain.length > 0) {
-        // Skills need clarification
         setUncertainSkills(uncertain);
-        setMode("clarify");
+      }
+
+      // Always go to clarify page — let user review/fill missing details
+      setMode("clarify");
+
+      // Determine what was missed
+      const missingFields: string[] = [];
+      if (!parsed.name && !personal.fullName) missingFields.push("name");
+      if (!parsed.phone && !personal.phone) missingFields.push("phone");
+      if (!parsed.location && !personal.location)
+        missingFields.push("location");
+
+      if (missingFields.length > 0 || uncertain.length > 0) {
         toast.success(
-          "Resume parsed! Please confirm proficiency for some inferred skills.",
+          `Resume parsed! Please fill in missing details${uncertain.length > 0 ? " and confirm skill proficiencies" : ""}.`,
         );
       } else {
-        // Everything captured — go straight to finishing
-        toast.success("Resume parsed! Setting up your profile...");
-        await finishOnboarding(
-          parsed.name || personal.fullName || user?.fullName || "",
-          parsed.phone || personal.phone,
-          parsed.location || personal.location,
-          parsed.linkedinUrl || personal.linkedin,
-          highConf,
-          parsedProjects,
-          parsedExperience,
+        toast.success(
+          "Resume parsed successfully! Please review your details and confirm.",
         );
       }
     } catch (err: any) {
@@ -429,8 +433,19 @@ const CandidateOnboarding = () => {
     );
   }
 
-  // Mode: Clarify uncertain skills
+  // Mode: Clarify — review parsed details + fill missing fields + confirm skills
   if (mode === "clarify") {
+    const missingName = !personal.fullName.trim();
+    const missingPhone = !personal.phone.trim();
+    const missingLocation = !personal.location.trim();
+    const hasMissingFields = missingName || missingPhone || missingLocation;
+    const hasUncertainSkills = uncertainSkills.length > 0;
+
+    const canFinish =
+      personal.fullName.trim() &&
+      personal.phone.trim() &&
+      personal.location.trim();
+
     return (
       <div className="min-h-screen bg-background py-8 px-4">
         <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
@@ -438,68 +453,188 @@ const CandidateOnboarding = () => {
             <Logo />
           </div>
           <h1 className="text-2xl font-bold font-heading text-center">
-            Almost Done!
+            Review Your Details
           </h1>
 
-          <div className="polished-card-static p-6 space-y-5">
-            <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-              <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-amber-800">
-                  Please provide some clarification on the following skills
-                </p>
-                <p className="text-sm text-amber-700 mt-1">
-                  These skills were inferred from your resume. Please confirm or
-                  adjust the proficiency level for each.
-                </p>
+          {/* Missing personal info warning */}
+          {hasMissingFields && (
+            <div className="polished-card-static p-6 space-y-4">
+              <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">
+                <AlertTriangle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold text-red-800">
+                    Some required details were not found in your resume
+                  </p>
+                  <p className="text-sm text-red-700 mt-1">
+                    Please fill in the missing fields below before continuing.
+                  </p>
+                </div>
               </div>
             </div>
+          )}
 
-            {uncertainSkills.map((s, i) => (
-              <div key={i} className="flex gap-3 items-end">
-                <div className="flex-1 space-y-1">
-                  <label className="text-sm font-medium">Skill</label>
-                  <Input value={s.name} readOnly className="bg-muted" />
-                </div>
-                <div className="flex-1 space-y-1">
-                  <label className="text-sm font-medium">Proficiency</label>
-                  <Select
-                    value={s.proficiency}
-                    onValueChange={(v) => {
-                      const n = [...uncertainSkills];
-                      n[i].proficiency = v;
-                      setUncertainSkills(n);
-                    }}
+          {/* Personal details — always shown for review, missing fields highlighted */}
+          <div className="polished-card-static p-6 space-y-4">
+            <h2 className="font-semibold font-heading text-lg">
+              Personal Details
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-sm font-medium">
+                  Full Name *
+                  {missingName && (
+                    <span className="text-destructive ml-1">(missing)</span>
+                  )}
+                </label>
+                <Input
+                  placeholder="Enter your full name"
+                  value={personal.fullName}
+                  onChange={(e) =>
+                    setPersonal({ ...personal, fullName: e.target.value })
+                  }
+                  className={missingName ? "border-destructive bg-red-50" : ""}
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Email</label>
+                <Input
+                  value={personal.email}
+                  onChange={(e) =>
+                    setPersonal({ ...personal, email: e.target.value })
+                  }
+                  className="bg-muted"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-sm font-medium">
+                  Phone *
+                  {missingPhone && (
+                    <span className="text-destructive ml-1">(missing)</span>
+                  )}
+                </label>
+                <Input
+                  placeholder="Enter your phone number"
+                  value={personal.phone}
+                  onChange={(e) =>
+                    setPersonal({ ...personal, phone: e.target.value })
+                  }
+                  className={missingPhone ? "border-destructive bg-red-50" : ""}
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-sm font-medium">
+                  Location *
+                  {missingLocation && (
+                    <span className="text-destructive ml-1">(missing)</span>
+                  )}
+                </label>
+                <Input
+                  placeholder="City, State"
+                  value={personal.location}
+                  onChange={(e) =>
+                    setPersonal({ ...personal, location: e.target.value })
+                  }
+                  className={
+                    missingLocation ? "border-destructive bg-red-50" : ""
+                  }
+                />
+              </div>
+              <div className="space-y-1 sm:col-span-2">
+                <label className="text-sm font-medium">LinkedIn URL</label>
+                <Input
+                  placeholder="https://linkedin.com/in/..."
+                  value={personal.linkedin}
+                  onChange={(e) =>
+                    setPersonal({ ...personal, linkedin: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Confirmed skills */}
+          {skills.length > 0 && (
+            <div className="polished-card-static p-6 space-y-4">
+              <h2 className="font-semibold font-heading text-lg">
+                Confirmed Skills ({skills.length})
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {skills.map((s, i) => (
+                  <span
+                    key={i}
+                    className="px-3 py-1.5 bg-green-50 border border-green-200 text-green-800 rounded-full text-sm font-medium"
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">1 - Beginner</SelectItem>
-                      <SelectItem value="2">2 - Basic</SelectItem>
-                      <SelectItem value="3">3 - Intermediate</SelectItem>
-                      <SelectItem value="4">4 - Advanced</SelectItem>
-                      <SelectItem value="5">5 - Expert</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    {s.name} — Lv.{s.proficiency}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Uncertain skills needing clarification */}
+          {hasUncertainSkills && (
+            <div className="polished-card-static p-6 space-y-5">
+              <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold text-amber-800">
+                    Please confirm proficiency for these skills
+                  </p>
+                  <p className="text-sm text-amber-700 mt-1">
+                    These skills were inferred from your resume. Adjust the
+                    level if needed.
+                  </p>
                 </div>
               </div>
-            ))}
 
-            <Button
-              className="w-full"
-              onClick={handleClarifyFinish}
-              disabled={saving}
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Saving…
-                </>
-              ) : (
-                "Finish"
-              )}
-            </Button>
-          </div>
+              {uncertainSkills.map((s, i) => (
+                <div key={i} className="flex gap-3 items-end">
+                  <div className="flex-1 space-y-1">
+                    <label className="text-sm font-medium">Skill</label>
+                    <Input value={s.name} readOnly className="bg-muted" />
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <label className="text-sm font-medium">Proficiency</label>
+                    <Select
+                      value={s.proficiency}
+                      onValueChange={(v) => {
+                        const n = [...uncertainSkills];
+                        n[i].proficiency = v;
+                        setUncertainSkills(n);
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select level" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">1 - Beginner</SelectItem>
+                        <SelectItem value="2">2 - Basic</SelectItem>
+                        <SelectItem value="3">3 - Intermediate</SelectItem>
+                        <SelectItem value="4">4 - Advanced</SelectItem>
+                        <SelectItem value="5">5 - Expert</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <Button
+            className="w-full"
+            onClick={handleClarifyFinish}
+            disabled={saving || !canFinish}
+          >
+            {saving ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Saving…
+              </>
+            ) : !canFinish ? (
+              "Please fill all required fields above"
+            ) : (
+              "Confirm & Finish"
+            )}
+          </Button>
         </div>
       </div>
     );

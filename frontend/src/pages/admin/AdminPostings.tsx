@@ -79,61 +79,63 @@ const AdminPostings = () => {
         </div>
 
         <div className="polished-card-static overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-retro-charcoal/5 border-b">
-              <tr>
-                <th className="text-left p-3 font-medium">Title</th>
-                <th className="text-left p-3 font-medium">Type</th>
-                <th className="text-left p-3 font-medium">Company</th>
-                <th className="text-left p-3 font-medium">Apps</th>
-                <th className="text-left p-3 font-medium">Deadline</th>
-                <th className="text-right p-3 font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((p) => (
-                <tr
-                  key={p.id}
-                  className="border-b last:border-0 hover:bg-retro-beige/50"
-                >
-                  <td className="p-3 font-medium">{p.title}</td>
-                  <td className="p-3">
-                    <Badge variant="outline" className="text-xs">
-                      {p.type === "INTERNSHIP" ? "Internship" : "Project"}
-                    </Badge>
-                  </td>
-                  <td className="p-3 text-muted-foreground">
-                    {p.recruiter?.companyName || "—"}
-                  </td>
-                  <td className="p-3">{p._count?.applications || 0}</td>
-                  <td className="p-3 text-muted-foreground">
-                    {new Date(p.deadline).toLocaleDateString()}
-                  </td>
-                  <td className="p-3 text-right">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-destructive"
-                      title="Delete"
-                      onClick={() => setDeleteTarget(p.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-              {filtered.length === 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[700px]">
+              <thead className="bg-retro-charcoal/5 border-b">
                 <tr>
-                  <td
-                    colSpan={6}
-                    className="p-6 text-center text-muted-foreground"
-                  >
-                    No postings found.
-                  </td>
+                  <th className="text-left p-3 font-medium">Title</th>
+                  <th className="text-left p-3 font-medium">Type</th>
+                  <th className="text-left p-3 font-medium">Company</th>
+                  <th className="text-left p-3 font-medium">Apps</th>
+                  <th className="text-left p-3 font-medium">Deadline</th>
+                  <th className="text-right p-3 font-medium">Actions</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filtered.map((p) => (
+                  <tr
+                    key={p.id}
+                    className="border-b last:border-0 hover:bg-retro-beige/50"
+                  >
+                    <td className="p-3 font-medium">{p.title}</td>
+                    <td className="p-3">
+                      <Badge variant="outline" className="text-xs">
+                        {p.type === "INTERNSHIP" ? "Internship" : "Project"}
+                      </Badge>
+                    </td>
+                    <td className="p-3 text-muted-foreground">
+                      {p.recruiter?.companyName || "—"}
+                    </td>
+                    <td className="p-3">{p._count?.applications || 0}</td>
+                    <td className="p-3 text-muted-foreground">
+                      {new Date(p.deadline).toLocaleDateString()}
+                    </td>
+                    <td className="p-3 text-right">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-destructive"
+                        title="Delete"
+                        onClick={() => setDeleteTarget(p.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+                {filtered.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="p-6 text-center text-muted-foreground"
+                    >
+                      No postings found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <ConfirmationModal

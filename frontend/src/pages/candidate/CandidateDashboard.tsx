@@ -26,6 +26,7 @@ const CandidateDashboard = () => {
   const [internships, setInternships] = useState<Posting[]>([]);
   const [projects, setProjects] = useState<Posting[]>([]);
   const [skillCount, setSkillCount] = useState(0);
+  const [noSkills, setNoSkills] = useState(false);
   const [loading, setLoading] = useState(true);
   const { updateUserName } = useAuth();
 
@@ -38,6 +39,7 @@ const CandidateDashboard = () => {
         ]);
         setInternships(recsRes.data.internships || []);
         setProjects(recsRes.data.projects || []);
+        setNoSkills(recsRes.data.noSkills || false);
         setSkillCount(profileRes.data.profile?.skills?.length || 0);
 
         // Update sidebar name from profile (fixes stale localStorage)
@@ -94,7 +96,9 @@ const CandidateDashboard = () => {
             Welcome back 👋
           </h1>
           <p className="text-retro-brown text-sm mt-1">
-            Explore internships and projects that match your skills
+            {noSkills
+              ? "Add skills to your profile to get personalized recommendations"
+              : "Explore internships and projects that match your skills"}
           </p>
         </div>
 
@@ -127,112 +131,139 @@ const CandidateDashboard = () => {
           ))}
         </div>
 
-        {/* Recommended Internships */}
-        <section>
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2">
-              <Briefcase className="h-5 w-5 text-retro-charcoal" />
-              <h2 className="text-lg font-heading font-bold text-retro-charcoal">
-                Recommended Internships
-              </h2>
+        {/* No skills CTA */}
+        {noSkills && (
+          <section className="polished-card-static p-8 text-center space-y-4">
+            <div className="h-16 w-16 rounded-2xl bg-retro-gold/15 flex items-center justify-center mx-auto">
+              <Target className="h-8 w-8 text-retro-gold" />
             </div>
-            <Link
-              to="/internships"
-              className="text-sm text-retro-olive hover:underline font-semibold"
-            >
-              View All →
-            </Link>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {internships.slice(0, 3).map((item, i) => (
-              <Link
-                key={item.id}
-                to={`/internships/${item.id}`}
-                className="polished-card p-6 group animate-fade-in-up"
-                style={{ animationDelay: `${i * 0.1}s` }}
-              >
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h3 className="font-heading font-bold text-retro-charcoal group-hover:text-retro-olive transition-colors">
-                      {item.title}
-                    </h3>
-                    <p className="text-sm text-retro-brown mt-0.5">
-                      {item.recruiter?.companyName || "Company"}
-                    </p>
-                  </div>
-                  <Sparkles className="h-5 w-5 text-retro-gold shrink-0" />
-                </div>
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {(item.postingSkills || []).slice(0, 3).map((s) => (
-                    <span key={s.skillName} className="tag">
-                      {s.skillName}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="font-semibold text-retro-charcoal">
-                    {item.stipend ? `$${item.stipend}/mo` : "Unpaid"}
-                  </span>
-                  <span className="text-xs text-retro-brown">
-                    {new Date(item.deadline).toLocaleDateString()}
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-          {internships.length === 0 && (
-            <p className="text-muted-foreground text-sm text-center py-4">
-              No matching internships found. Add more skills to your profile!
+            <h2 className="text-xl font-heading font-bold text-retro-charcoal">
+              No Skills Added Yet
+            </h2>
+            <p className="text-retro-brown max-w-md mx-auto">
+              Recommendations are based on your skills. Add your technical
+              skills to get personalized internship and project matches.
             </p>
-          )}
-        </section>
+            <Link
+              to="/dashboard/candidate/profile"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-retro-charcoal text-retro-cream rounded-xl font-semibold text-sm hover:bg-retro-olive transition-colors"
+            >
+              <Sparkles className="h-4 w-4" />
+              Add Skills to Your Profile
+            </Link>
+          </section>
+        )}
 
-        {/* Recommended Projects */}
-        <section>
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2">
-              <FolderKanban className="h-5 w-5 text-retro-charcoal" />
-              <h2 className="text-lg font-heading font-bold text-retro-charcoal">
-                Recommended Projects
-              </h2>
-            </div>
-            <Link
-              to="/projects"
-              className="text-sm text-retro-olive hover:underline font-semibold"
-            >
-              View All →
-            </Link>
-          </div>
-          <div className="grid md:grid-cols-2 gap-5">
-            {projects.slice(0, 2).map((item, i) => (
+        {/* Recommended Internships — only shown when user has skills */}
+        {!noSkills && (
+          <section>
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-2">
+                <Briefcase className="h-5 w-5 text-retro-charcoal" />
+                <h2 className="text-lg font-heading font-bold text-retro-charcoal">
+                  Recommended Internships
+                </h2>
+              </div>
               <Link
-                key={item.id}
-                to={`/projects/${item.id}`}
-                className="polished-card p-6 group animate-fade-in-up"
-                style={{ animationDelay: `${i * 0.1}s` }}
+                to="/internships"
+                className="text-sm text-retro-olive hover:underline font-semibold"
               >
-                <h3 className="font-heading font-bold text-retro-charcoal group-hover:text-retro-olive transition-colors mb-1">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-retro-brown mb-3">
-                  {item.recruiter?.companyName || "Organization"}
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {(item.postingSkills || []).slice(0, 3).map((s) => (
-                    <span key={s.skillName} className="tag">
-                      {s.skillName}
-                    </span>
-                  ))}
-                </div>
+                View All →
               </Link>
-            ))}
-          </div>
-          {projects.length === 0 && (
-            <p className="text-muted-foreground text-sm text-center py-4">
-              No matching projects found.
-            </p>
-          )}
-        </section>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {internships.slice(0, 3).map((item, i) => (
+                <Link
+                  key={item.id}
+                  to={`/internships/${item.id}`}
+                  className="polished-card p-6 group animate-fade-in-up"
+                  style={{ animationDelay: `${i * 0.1}s` }}
+                >
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <h3 className="font-heading font-bold text-retro-charcoal group-hover:text-retro-olive transition-colors">
+                        {item.title}
+                      </h3>
+                      <p className="text-sm text-retro-brown mt-0.5">
+                        {item.recruiter?.companyName || "Company"}
+                      </p>
+                    </div>
+                    <Sparkles className="h-5 w-5 text-retro-gold shrink-0" />
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {(item.postingSkills || []).slice(0, 3).map((s) => (
+                      <span key={s.skillName} className="tag">
+                        {s.skillName}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="font-semibold text-retro-charcoal">
+                      {item.stipend ? `$${item.stipend}/mo` : "Unpaid"}
+                    </span>
+                    <span className="text-xs text-retro-brown">
+                      {new Date(item.deadline).toLocaleDateString()}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            {internships.length === 0 && (
+              <p className="text-muted-foreground text-sm text-center py-4">
+                No matching internships found. Add more skills to your profile!
+              </p>
+            )}
+          </section>
+        )}
+
+        {/* Recommended Projects — only shown when user has skills */}
+        {!noSkills && (
+          <section>
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-2">
+                <FolderKanban className="h-5 w-5 text-retro-charcoal" />
+                <h2 className="text-lg font-heading font-bold text-retro-charcoal">
+                  Recommended Projects
+                </h2>
+              </div>
+              <Link
+                to="/projects"
+                className="text-sm text-retro-olive hover:underline font-semibold"
+              >
+                View All →
+              </Link>
+            </div>
+            <div className="grid md:grid-cols-2 gap-5">
+              {projects.slice(0, 2).map((item, i) => (
+                <Link
+                  key={item.id}
+                  to={`/projects/${item.id}`}
+                  className="polished-card p-6 group animate-fade-in-up"
+                  style={{ animationDelay: `${i * 0.1}s` }}
+                >
+                  <h3 className="font-heading font-bold text-retro-charcoal group-hover:text-retro-olive transition-colors mb-1">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-retro-brown mb-3">
+                    {item.recruiter?.companyName || "Organization"}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {(item.postingSkills || []).slice(0, 3).map((s) => (
+                      <span key={s.skillName} className="tag">
+                        {s.skillName}
+                      </span>
+                    ))}
+                  </div>
+                </Link>
+              ))}
+            </div>
+            {projects.length === 0 && (
+              <p className="text-muted-foreground text-sm text-center py-4">
+                No matching projects found.
+              </p>
+            )}
+          </section>
+        )}
       </div>
     </DashboardLayout>
   );

@@ -264,7 +264,7 @@ const CandidateProfile = () => {
           <ArrowLeft className="h-4 w-4" /> Back to Dashboard
         </Link>
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <h1 className="text-2xl font-bold font-heading">My Profile</h1>
           {!editing ? (
             <Button
@@ -283,7 +283,7 @@ const CandidateProfile = () => {
               <Pencil className="h-4 w-4" /> Edit
             </Button>
           ) : (
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button
                 variant="outline"
                 className="gap-2"
@@ -330,7 +330,7 @@ const CandidateProfile = () => {
           </h2>
           {editing ? (
             <>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="text-sm font-medium">Full Name</label>
                   <Input
@@ -345,7 +345,7 @@ const CandidateProfile = () => {
                   <Input type="email" value={personal.email} disabled />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="text-sm font-medium">Phone</label>
                   <Input
@@ -376,7 +376,7 @@ const CandidateProfile = () => {
               </div>
             </>
           ) : (
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="text-muted-foreground">Full Name:</span>{" "}
                 <strong>{personal.fullName || "Not set"}</strong>
@@ -393,7 +393,7 @@ const CandidateProfile = () => {
                 <span className="text-muted-foreground">Location:</span>{" "}
                 <strong>{personal.location || "Not set"}</strong>
               </div>
-              <div className="col-span-2">
+              <div className="sm:col-span-2">
                 <span className="text-muted-foreground">LinkedIn:</span>{" "}
                 {personal.linkedin ? (
                   <a
@@ -676,7 +676,7 @@ const CandidateProfile = () => {
                     setExperiences(n);
                   }}
                 />
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Input
                     placeholder="Role"
                     value={exp.role}
