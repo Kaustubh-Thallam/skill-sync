@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
+import { ProfileSkeleton } from "@/components/skeletons";
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/api/axios";
 
@@ -59,9 +60,7 @@ const AdminProfile = () => {
   if (loading) {
     return (
       <DashboardLayout role="admin">
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-retro-gold" />
-        </div>
+        <ProfileSkeleton />
       </DashboardLayout>
     );
   }

@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, Trash2, Key, Search, Pencil } from "lucide-react";
+import { Trash2, Key, Search, Pencil } from "lucide-react";
+import { TableSkeleton } from "@/components/skeletons";
 import { toast } from "sonner";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import api from "@/api/axios";
@@ -79,8 +80,9 @@ const AdminRecruiters = () => {
   if (loading) {
     return (
       <DashboardLayout role="admin">
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-retro-gold" />
+        <div className="max-w-5xl mx-auto space-y-6">
+          <div className="h-8 w-52 bg-muted animate-pulse rounded-md" />
+          <TableSkeleton columns={5} rows={6} />
         </div>
       </DashboardLayout>
     );

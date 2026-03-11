@@ -7,8 +7,8 @@ import {
   Sparkles,
   TrendingUp,
   Target,
-  Loader2,
 } from "lucide-react";
+import { DashboardSkeleton } from "@/components/skeletons";
 import api from "@/api/axios";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -81,9 +81,7 @@ const CandidateDashboard = () => {
   if (loading) {
     return (
       <DashboardLayout role="candidate">
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-retro-olive" />
-        </div>
+        <DashboardSkeleton />
       </DashboardLayout>
     );
   }

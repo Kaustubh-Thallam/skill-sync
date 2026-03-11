@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 import FilterBar from "@/components/FilterBar";
 import Pagination from "@/components/Pagination";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { CardGridSkeleton } from "@/components/skeletons";
 import { Link as RouterLink } from "react-router-dom";
 import api from "@/api/axios";
 
@@ -70,9 +71,7 @@ const CandidateProjects = () => {
         />
 
         {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-retro-olive" />
-          </div>
+          <CardGridSkeleton count={6} />
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {postings.map((item) => (

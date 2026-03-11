@@ -5,7 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { PostingListSkeleton } from "@/components/skeletons";
 import api from "@/api/axios";
 
 interface ApplicationItem {
@@ -61,8 +62,8 @@ const Applied = () => {
   if (loading) {
     return (
       <DashboardLayout role="candidate">
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-retro-olive" />
+        <div className="space-y-6">
+          <PostingListSkeleton count={4} />
         </div>
       </DashboardLayout>
     );

@@ -10,6 +10,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
+import { DetailPageSkeleton } from "@/components/skeletons";
 import api from "@/api/axios";
 
 const proficiencyLabels: Record<number, string> = {
@@ -137,9 +138,7 @@ const InternshipDetail = () => {
   if (loading) {
     return (
       <DashboardLayout role="candidate">
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-retro-olive" />
-        </div>
+        <DetailPageSkeleton />
       </DashboardLayout>
     );
   }

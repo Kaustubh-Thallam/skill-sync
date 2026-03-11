@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Pencil, ArrowLeft, Trash, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { ProfileSkeleton } from "@/components/skeletons";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/api/axios";
@@ -85,9 +86,7 @@ const RecruiterProfile = () => {
   if (loading) {
     return (
       <DashboardLayout role="recruiter">
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-retro-gold" />
-        </div>
+        <ProfileSkeleton />
       </DashboardLayout>
     );
   }

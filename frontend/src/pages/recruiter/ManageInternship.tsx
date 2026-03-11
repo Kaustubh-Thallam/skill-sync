@@ -15,6 +15,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import { toast } from "sonner";
+import { DetailPageSkeleton } from "@/components/skeletons";
 import {
   Users,
   BarChart3,
@@ -207,9 +208,7 @@ const ManageInternship = () => {
   if (loading) {
     return (
       <DashboardLayout role="recruiter">
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-retro-olive" />
-        </div>
+        <DetailPageSkeleton />
       </DashboardLayout>
     );
   }

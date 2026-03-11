@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Loader2, ArrowLeft, Plus, Trash2, Save } from "lucide-react";
 import { toast } from "sonner";
+import { ProfileSkeleton } from "@/components/skeletons";
 import api from "@/api/axios";
 
 interface SkillRow {
@@ -120,9 +121,7 @@ const AdminEditUser = () => {
   if (loading) {
     return (
       <DashboardLayout role="admin">
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-retro-gold" />
-        </div>
+        <ProfileSkeleton />
       </DashboardLayout>
     );
   }
@@ -238,7 +237,7 @@ const AdminEditUser = () => {
                     }}
                   />
                 </div>
-                <div className="w-36 space-y-1">
+                <div className="w-48 space-y-1">
                   <label className="text-sm font-medium">Level</label>
                   <Select
                     value={s.proficiency}

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Badge } from "@/components/ui/badge";
-import { Users, Loader2 } from "lucide-react";
+import { Users } from "lucide-react";
+import { PostingListSkeleton } from "@/components/skeletons";
 import api from "@/api/axios";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -39,8 +40,12 @@ const RecruiterDashboard = () => {
   if (loading) {
     return (
       <DashboardLayout role="recruiter">
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-retro-olive" />
+        <div className="space-y-8">
+          <div>
+            <div className="h-8 w-52 bg-muted animate-pulse rounded-md mb-2" />
+            <div className="h-4 w-72 bg-muted animate-pulse rounded-md" />
+          </div>
+          <PostingListSkeleton count={4} />
         </div>
       </DashboardLayout>
     );

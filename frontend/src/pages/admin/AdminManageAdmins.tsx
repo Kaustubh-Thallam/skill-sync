@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2, Trash2, Plus } from "lucide-react";
 import { toast } from "sonner";
+import { TableSkeleton } from "@/components/skeletons";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import api from "@/api/axios";
 
@@ -81,8 +82,9 @@ const AdminManageAdmins = () => {
   if (loading) {
     return (
       <DashboardLayout role="admin">
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-retro-gold" />
+        <div className="max-w-3xl mx-auto space-y-6">
+          <div className="h-8 w-44 bg-muted animate-pulse rounded-md" />
+          <TableSkeleton columns={3} rows={4} />
         </div>
       </DashboardLayout>
     );

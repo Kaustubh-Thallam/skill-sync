@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Users, Briefcase, FolderKanban, Shield, Loader2 } from "lucide-react";
 import api from "@/api/axios";
+import { AdminDashboardSkeleton } from "@/components/skeletons";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -24,9 +25,7 @@ const AdminDashboard = () => {
   if (loading) {
     return (
       <DashboardLayout role="admin">
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-retro-gold" />
-        </div>
+        <AdminDashboardSkeleton />
       </DashboardLayout>
     );
   }
@@ -37,28 +36,28 @@ const AdminDashboard = () => {
       value: stats.candidates,
       icon: Users,
       link: "/admin/users",
-      color: "bg-blue-500",
+      color: "bg-retro-charcoal",
     },
     {
       label: "Recruiters",
       value: stats.recruiters,
       icon: Briefcase,
       link: "/admin/recruiters",
-      color: "bg-green-500",
+      color: "bg-retro-olive",
     },
     {
       label: "Postings",
       value: stats.postings,
       icon: FolderKanban,
       link: "/admin/postings",
-      color: "bg-amber-500",
+      color: "bg-retro-gold",
     },
     {
       label: "Admins",
       value: stats.admins,
       icon: Shield,
       link: "/admin/manage",
-      color: "bg-purple-500",
+      color: "bg-retro-brown",
     },
   ];
 
