@@ -42,8 +42,12 @@ const RecruiterDashboard = () => {
       <DashboardLayout role="recruiter">
         <div className="space-y-8">
           <div>
-            <div className="h-8 w-52 bg-muted animate-pulse rounded-md mb-2" />
-            <div className="h-4 w-72 bg-muted animate-pulse rounded-md" />
+            <h1 className="text-2xl font-bold font-heading">
+              Recruiter Dashboard
+            </h1>
+            <p className="text-muted-foreground">
+              Manage your postings and review candidates
+            </p>
           </div>
           <PostingListSkeleton count={4} />
         </div>

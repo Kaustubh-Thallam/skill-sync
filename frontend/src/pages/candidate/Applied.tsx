@@ -63,6 +63,13 @@ const Applied = () => {
     return (
       <DashboardLayout role="candidate">
         <div className="space-y-6">
+          <Link
+            to="/dashboard/candidate"
+            className="inline-flex items-center gap-1 text-sm text-retro-brown hover:text-retro-charcoal font-medium transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back to Dashboard
+          </Link>
+          <h1 className="text-2xl font-bold font-heading">Applied Postings</h1>
           <PostingListSkeleton count={4} />
         </div>
       </DashboardLayout>

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Loader2, Trash2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { TableSkeleton } from "@/components/skeletons";
+import { Skeleton } from "@/components/ui/skeleton";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import api from "@/api/axios";
 
@@ -83,8 +84,12 @@ const AdminManageAdmins = () => {
     return (
       <DashboardLayout role="admin">
         <div className="max-w-3xl mx-auto space-y-6">
-          <div className="h-8 w-44 bg-muted animate-pulse rounded-md" />
-          <TableSkeleton columns={3} rows={4} />
+          <h1 className="text-2xl font-bold font-heading">Manage Admins</h1>
+          <TableSkeleton
+            headers={["Email", "Created", "Actions"]}
+            rows={4}
+            showSearch={false}
+          />
         </div>
       </DashboardLayout>
     );

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Trash2, Search } from "lucide-react";
 import { TableSkeleton } from "@/components/skeletons";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import api from "@/api/axios";
@@ -58,8 +59,19 @@ const AdminPostings = () => {
     return (
       <DashboardLayout role="admin">
         <div className="max-w-5xl mx-auto space-y-6">
-          <div className="h-8 w-52 bg-muted animate-pulse rounded-md" />
-          <TableSkeleton columns={6} rows={6} />
+          <h1 className="text-2xl font-bold font-heading">Manage Postings</h1>
+          <TableSkeleton
+            headers={[
+              "Title",
+              "Type",
+              "Company",
+              "Apps",
+              "Deadline",
+              "Actions",
+            ]}
+            rows={7}
+            searchPlaceholder="Search by title or company..."
+          />
         </div>
       </DashboardLayout>
     );
