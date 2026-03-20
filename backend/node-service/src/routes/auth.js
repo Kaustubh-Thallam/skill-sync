@@ -23,7 +23,16 @@ const loginLimiter = rateLimit({
 
 const signupSchema = z.object({
   email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number")
+    .regex(
+      /[^a-zA-Z0-9]/,
+      "Password must contain at least one special character",
+    ),
   role: z.enum(["CANDIDATE", "RECRUITER"], {
     errorMap: () => ({
       message: "Role must be CANDIDATE or RECRUITER",
@@ -95,13 +104,23 @@ router.post(
         recruiterProfile: { select: { companyName: true, onboarded: true } },
       },
     });
-    if (!user) throw new ApiError(401, "Invalid email or password.");
+    if (!user) {
+      console.warn(
+        `[SECURITY] Failed login — unknown email: ${data.email} from ${req.ip}`,
+      );
+      throw new ApiError(401, "Invalid email or password.");
+    }
 
     const validPassword = await bcrypt.compare(
       data.password,
       user.passwordHash,
     );
-    if (!validPassword) throw new ApiError(401, "Invalid email or password.");
+    if (!validPassword) {
+      console.warn(
+        `[SECURITY] Failed login — wrong password for: ${data.email} from ${req.ip}`,
+      );
+      throw new ApiError(401, "Invalid email or password.");
+    }
 
     const token = signToken({ userId: user.id, role: user.role });
 
@@ -139,6 +158,9 @@ router.delete(
     // Delete user — cascading deletes handle profile, skills, applications, etc.
     await prisma.user.delete({ where: { id: userId } });
 
+    console.warn(
+      `[SECURITY] Account deleted: ${userId} (${req.user.email}) from ${req.ip}`,
+    );
     res.json({ message: "Account deleted successfully." });
   }),
 );

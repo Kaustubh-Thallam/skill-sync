@@ -92,9 +92,52 @@ const AdminPostings = () => {
           />
         </div>
 
-        <div className="polished-card-static overflow-hidden">
+        {/* ── Mobile card layout ── */}
+        <div className="md:hidden space-y-3">
+          {filtered.map((p) => (
+            <div
+              key={p.id}
+              className="polished-card-static p-4 space-y-3"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium truncate">{p.title}</p>
+                  <p className="text-sm text-muted-foreground truncate">
+                    {p.recruiter?.companyName || "—"}
+                  </p>
+                </div>
+                <Badge variant="outline" className="text-xs shrink-0">
+                  {p.type === "INTERNSHIP" ? "Internship" : "Project"}
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center gap-3 text-muted-foreground">
+                  <span>{p._count?.applications || 0} apps</span>
+                  <span>{new Date(p.deadline).toLocaleDateString()}</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-destructive"
+                  title="Delete"
+                  onClick={() => setDeleteTarget(p.id)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          ))}
+          {filtered.length === 0 && (
+            <p className="text-center py-8 text-muted-foreground">
+              No postings found.
+            </p>
+          )}
+        </div>
+
+        {/* ── Desktop table layout ── */}
+        <div className="polished-card-static overflow-hidden hidden md:block">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[700px]">
+            <table className="w-full text-sm">
               <thead className="bg-retro-charcoal/5 border-b">
                 <tr>
                   <th className="text-left p-3 font-medium">Title</th>

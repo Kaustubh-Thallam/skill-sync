@@ -7,6 +7,7 @@ const prisma = require("../utils/prisma");
 const { authenticate, requireRole } = require("../middleware/auth");
 const ApiError = require("../utils/ApiError");
 const catchAsync = require("../utils/catchAsync");
+const rateLimit = require("../middleware/rateLimit");
 
 const router = express.Router();
 
@@ -21,6 +22,13 @@ const upload = multer({
 
 const PYTHON_SERVICE_URL =
   process.env.PYTHON_SERVICE_URL || "http://localhost:8000";
+
+// Rate limiter for resume uploads (AI-heavy — 5 per 15 min)
+const resumeLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: "Too many resume uploads. Please try again later.",
+});
 
 const onboardingSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
@@ -150,6 +158,7 @@ router.post(
   "/resume",
   authenticate,
   requireRole("CANDIDATE"),
+  resumeLimiter,
   upload.single("resume"),
   catchAsync(async (req, res) => {
     if (!req.file)

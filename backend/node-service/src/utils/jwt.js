@@ -8,12 +8,20 @@ if (!JWT_SECRET) {
 }
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
 
+const JWT_OPTIONS = {
+  issuer: "skillsync-api",
+  audience: "skillsync-client",
+};
+
 function signToken(payload) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  return jwt.sign(payload, JWT_SECRET, {
+    expiresIn: JWT_EXPIRES_IN,
+    ...JWT_OPTIONS,
+  });
 }
 
 function verifyToken(token) {
-  return jwt.verify(token, JWT_SECRET);
+  return jwt.verify(token, JWT_SECRET, JWT_OPTIONS);
 }
 
 module.exports = { signToken, verifyToken };

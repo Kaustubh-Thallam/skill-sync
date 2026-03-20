@@ -1,10 +1,25 @@
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
 const dotenv = require("dotenv");
+const rateLimit = require("./middleware/rateLimit");
 
 dotenv.config();
 
 const app = express();
+
+// ─── Security ───
+app.set("trust proxy", 1); // Trust Render/Vercel proxy for correct client IP
+app.use(helmet());         // Security headers (HSTS, X-Content-Type, X-Frame-Options, etc.)
+
+// ─── Global Rate Limiter ───
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    message: "Too many requests from this IP. Please try again later.",
+  }),
+);
 
 // ─── Core Middleware ───
 const allowedOrigins =

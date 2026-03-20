@@ -42,6 +42,9 @@ function rateLimit({
     res.set("X-RateLimit-Reset", String(Math.ceil(entry.resetAt / 1000)));
 
     if (entry.count > max) {
+      console.warn(
+        `[SECURITY] Rate limit exceeded: ${ip} on ${req.method} ${req.path}`,
+      );
       return res.status(429).json({ error: message });
     }
 

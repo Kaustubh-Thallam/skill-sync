@@ -109,9 +109,73 @@ const AdminUsers = () => {
           />
         </div>
 
-        <div className="polished-card-static overflow-hidden">
+        {/* ── Mobile card layout ── */}
+        <div className="md:hidden space-y-3">
+          {filtered.map((u) => (
+            <div
+              key={u.id}
+              className="polished-card-static p-4 space-y-3"
+            >
+              <div className="flex items-start justify-between">
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium truncate">
+                    {u.candidateProfile?.name || "—"}
+                  </p>
+                  <p className="text-sm text-muted-foreground truncate">
+                    {u.email}
+                  </p>
+                </div>
+                <span
+                  className={`text-xs px-2 py-0.5 rounded-full shrink-0 ml-2 ${u.candidateProfile?.onboarded ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}
+                >
+                  {u.candidateProfile?.onboarded ? "Yes" : "No"}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">
+                  {u.candidateProfile?.skills?.length || 0} skills
+                </span>
+                <div className="flex gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    title="Edit Profile"
+                    onClick={() => navigate(`/admin/edit/${u.id}`)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    title="Change Password"
+                    onClick={() => setPasswordTarget(u.id)}
+                  >
+                    <Key className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-destructive"
+                    title="Delete"
+                    onClick={() => setDeleteTarget(u.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
+          {filtered.length === 0 && (
+            <p className="text-center py-8 text-muted-foreground">
+              No candidates found.
+            </p>
+          )}
+        </div>
+
+        {/* ── Desktop table layout ── */}
+        <div className="polished-card-static overflow-hidden hidden md:block">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[640px]">
+            <table className="w-full text-sm">
               <thead className="bg-retro-charcoal/5 border-b">
                 <tr>
                   <th className="text-left p-3 font-medium">Name</th>

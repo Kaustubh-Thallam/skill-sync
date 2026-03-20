@@ -47,7 +47,12 @@ router.get(
     const profile = await prisma.recruiterProfile.findUnique({
       where: { userId: req.user.id },
       include: {
-        postings: true,
+        postings: {
+          include: {
+            _count: { select: { applications: true } },
+          },
+          orderBy: { createdAt: "desc" },
+        },
         user: { select: { email: true } },
       },
     });

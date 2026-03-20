@@ -4,16 +4,25 @@ const prisma = require("../utils/prisma");
 const { authenticate, requireRole } = require("../middleware/auth");
 const ApiError = require("../utils/ApiError");
 const catchAsync = require("../utils/catchAsync");
+const rateLimit = require("../middleware/rateLimit");
 
 const router = express.Router();
 const PYTHON_SERVICE_URL =
   process.env.PYTHON_SERVICE_URL || "http://localhost:8000";
+
+// Rate limiter for score checks (AI-heavy — 10 per 15 min)
+const scoreLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: "Too many score check requests. Please try again later.",
+});
 
 // ─── POST /scores/check/:postingId ───
 router.post(
   "/check/:postingId",
   authenticate,
   requireRole("CANDIDATE"),
+  scoreLimiter,
   catchAsync(async (req, res) => {
     const { postingId } = req.params;
 
