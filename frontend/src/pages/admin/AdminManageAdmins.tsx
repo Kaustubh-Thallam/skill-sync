@@ -8,6 +8,7 @@ import { TableSkeleton } from "@/components/skeletons";
 import { Skeleton } from "@/components/ui/skeleton";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import api from "@/api/axios";
+import { getErrorMessage } from "@/api/axios";
 
 interface AdminRow {
   id: string;
@@ -62,7 +63,7 @@ const AdminManageAdmins = () => {
       setNewPassword("");
       setShowCreate(false);
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to create admin.");
+      toast.error(getErrorMessage(err, "Failed to create admin."));
     } finally {
       setCreating(false);
     }
@@ -75,7 +76,7 @@ const AdminManageAdmins = () => {
       toast.success("Admin deleted.");
       setAdmins(admins.filter((a) => a.id !== deleteTarget));
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to delete admin.");
+      toast.error(getErrorMessage(err, "Failed to delete admin."));
     }
     setDeleteTarget(null);
   };

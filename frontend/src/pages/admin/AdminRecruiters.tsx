@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import api from "@/api/axios";
+import { getErrorMessage } from "@/api/axios";
 
 interface RecruiterRow {
   id: string;
@@ -53,7 +54,7 @@ const AdminRecruiters = () => {
       toast.success("Recruiter deleted.");
       setUsers(users.filter((u) => u.id !== deleteTarget));
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to delete recruiter.");
+      toast.error(getErrorMessage(err, "Failed to delete recruiter."));
     }
     setDeleteTarget(null);
   };
@@ -64,7 +65,7 @@ const AdminRecruiters = () => {
       await api.put(`/admin/users/${passwordTarget}/password`, { newPassword });
       toast.success("Password updated.");
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to update password.");
+      toast.error(getErrorMessage(err, "Failed to update password."));
     }
     setPasswordTarget(null);
     setNewPassword("");

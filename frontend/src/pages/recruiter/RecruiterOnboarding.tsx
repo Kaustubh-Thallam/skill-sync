@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
 import api from "@/api/axios";
+import { getErrorMessage } from "@/api/axios";
 
 const RecruiterOnboarding = () => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const RecruiterOnboarding = () => {
       toast.success("Welcome aboard! Your account is set up.");
       navigate("/dashboard/recruiter");
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to save profile.");
+      toast.error(getErrorMessage(err, "Failed to save profile."));
     } finally {
       setSaving(false);
     }

@@ -71,6 +71,7 @@ router.post(
           postingSkills: posting.postingSkills.map((s) => ({
             skillName: s.skillName,
             weight: s.weight,
+            requiredProficiency: s.requiredProficiency,
           })),
         },
         { timeout: 15000 },

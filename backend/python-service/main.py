@@ -599,6 +599,7 @@ class SkillEntry(BaseModel):
 class PostingSkillEntry(BaseModel):
     skillName: str
     weight: int
+    requiredProficiency: int = 3
 
 
 class ScoreRequest(BaseModel):
@@ -621,26 +622,30 @@ async def calculate_score(req: ScoreRequest):
     for ps in req.postingSkills:
         ps_name = ps.skillName.lower().strip()
         weight = ps.weight
-        max_possible += 5 * weight
+        req_prof = ps.requiredProficiency
+        max_possible += req_prof * weight
 
         candidate_prof = skill_lookup.get(ps_name, 0)
         matched = candidate_prof > 0
-        contribution = candidate_prof * weight
+        capped = min(candidate_prof, req_prof)
+        contribution = capped * weight
         earned += contribution
 
         breakdown.append({
             "skillName": ps.skillName, "weight": weight,
+            "requiredProficiency": req_prof,
             "candidateProficiency": candidate_prof, "contribution": contribution,
-            "maxContribution": 5 * weight, "matched": matched,
+            "maxContribution": req_prof * weight, "matched": matched,
         })
 
-        if not matched or candidate_prof < 3:
+        if not matched or candidate_prof < req_prof:
             suggestions = []
             for child, parents in SKILL_TAXONOMY.items():
                 if ps_name in [p.lower() for p in parents]:
                     suggestions.append(child)
             gaps.append({
                 "skillName": ps.skillName, "currentProficiency": candidate_prof,
+                "requiredProficiency": req_prof,
                 "requiredWeight": weight, "suggestions": suggestions[:5],
             })
 
@@ -650,8 +655,9 @@ async def calculate_score(req: ScoreRequest):
     for ps in req.postingSkills:
         ps_name = ps.skillName.lower().strip()
         weight = ps.weight
+        req_prof = ps.requiredProficiency
         candidate_prof = skill_lookup.get(ps_name, 0)
-        projected_earned += max(candidate_prof, 5) * weight
+        projected_earned += max(candidate_prof, req_prof) * weight
 
     projected_score = round((projected_earned / max_possible) * 100, 2) if max_possible > 0 else 0
 

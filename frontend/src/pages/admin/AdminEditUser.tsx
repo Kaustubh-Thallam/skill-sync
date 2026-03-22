@@ -14,6 +14,7 @@ import { Loader2, ArrowLeft, Plus, Trash2, Save } from "lucide-react";
 import { toast } from "sonner";
 import { ProfileSkeleton } from "@/components/skeletons";
 import api from "@/api/axios";
+import { getErrorMessage } from "@/api/axios";
 
 interface SkillRow {
   skillName: string;
@@ -112,7 +113,7 @@ const AdminEditUser = () => {
       toast.success("Profile updated successfully.");
       navigate(-1);
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to update profile.");
+      toast.error(getErrorMessage(err, "Failed to update profile."));
     } finally {
       setSaving(false);
     }

@@ -6,6 +6,7 @@ import Logo from "@/components/Logo";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { ArrowLeft, Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { getErrorMessage } from "@/api/axios";
 
 // ── Password rules ──────────────────────────────────────────────────────────
 const PASSWORD_RULES = [
@@ -87,9 +88,7 @@ const Signup = () => {
         navigate("/onboarding/recruiter");
       }
     } catch (err: any) {
-      const msg =
-        err.response?.data?.error || "Signup failed. Please try again.";
-      toast.error(msg);
+      toast.error(getErrorMessage(err, "Signup failed. Please try again."));
     } finally {
       setLoading(false);
     }

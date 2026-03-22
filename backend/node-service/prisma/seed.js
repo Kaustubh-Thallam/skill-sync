@@ -63,9 +63,9 @@ async function main() {
       location: "San Francisco, CA",
       remote: true,
       skills: [
-        { skillName: "python", weight: 5 },
-        { skillName: "sql", weight: 3 },
-        { skillName: "node.js", weight: 4 },
+        { skillName: "python", weight: 5, requiredProficiency: 4 },
+        { skillName: "sql", weight: 3, requiredProficiency: 3 },
+        { skillName: "node.js", weight: 4, requiredProficiency: 3 },
       ],
     },
     {
@@ -80,9 +80,9 @@ async function main() {
       location: "Remote",
       remote: true,
       skills: [
-        { skillName: "react", weight: 5 },
-        { skillName: "javascript", weight: 4 },
-        { skillName: "css", weight: 2 },
+        { skillName: "react", weight: 5, requiredProficiency: 4 },
+        { skillName: "javascript", weight: 4, requiredProficiency: 3 },
+        { skillName: "css", weight: 2, requiredProficiency: 2 },
       ],
     },
     {
@@ -97,9 +97,9 @@ async function main() {
       location: "New York, NY",
       remote: false,
       skills: [
-        { skillName: "python", weight: 5 },
-        { skillName: "machine learning", weight: 5 },
-        { skillName: "rest apis", weight: 3 },
+        { skillName: "python", weight: 5, requiredProficiency: 5 },
+        { skillName: "machine learning", weight: 5, requiredProficiency: 4 },
+        { skillName: "rest apis", weight: 3, requiredProficiency: 3 },
       ],
     },
     {
@@ -114,10 +114,10 @@ async function main() {
       location: "Austin, TX",
       remote: true,
       skills: [
-        { skillName: "react", weight: 4 },
-        { skillName: "node.js", weight: 4 },
-        { skillName: "postgresql", weight: 3 },
-        { skillName: "git", weight: 1 },
+        { skillName: "react", weight: 4, requiredProficiency: 3 },
+        { skillName: "node.js", weight: 4, requiredProficiency: 4 },
+        { skillName: "postgresql", weight: 3, requiredProficiency: 3 },
+        { skillName: "git", weight: 1, requiredProficiency: 2 },
       ],
     },
     {
@@ -132,9 +132,9 @@ async function main() {
       location: "Remote",
       remote: true,
       skills: [
-        { skillName: "docker", weight: 5 },
-        { skillName: "git", weight: 3 },
-        { skillName: "python", weight: 2 },
+        { skillName: "docker", weight: 5, requiredProficiency: 4 },
+        { skillName: "git", weight: 3, requiredProficiency: 3 },
+        { skillName: "python", weight: 2, requiredProficiency: 2 },
       ],
     },
   ];

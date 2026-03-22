@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { ProfileSkeleton } from "@/components/skeletons";
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/api/axios";
+import { getErrorMessage } from "@/api/axios";
 
 const AdminProfile = () => {
   const { user } = useAuth();
@@ -51,7 +52,7 @@ const AdminProfile = () => {
       setNewPassword("");
       setConfirmPassword("");
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to update profile.");
+      toast.error(getErrorMessage(err, "Failed to update profile."));
     } finally {
       setSaving(false);
     }

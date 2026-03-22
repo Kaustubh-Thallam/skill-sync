@@ -15,10 +15,12 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { ArrowLeft, Plus, Trash2, Loader2 } from "lucide-react";
 import api from "@/api/axios";
+import { getErrorMessage } from "@/api/axios";
 
 interface SkillWeight {
   name: string;
   weight: string;
+  requiredProficiency: string;
 }
 
 const PostInternship = () => {
@@ -26,7 +28,7 @@ const PostInternship = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [skills, setSkills] = useState<SkillWeight[]>([
-    { name: "", weight: "" },
+    { name: "", weight: "", requiredProficiency: "3" },
   ]);
   const [stipend, setStipend] = useState("");
   const [duration, setDuration] = useState("");
@@ -34,7 +36,8 @@ const PostInternship = () => {
   const [remote, setRemote] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const addSkill = () => setSkills([...skills, { name: "", weight: "" }]);
+  const addSkill = () =>
+    setSkills([...skills, { name: "", weight: "", requiredProficiency: "3" }]);
   const removeSkill = (i: number) =>
     setSkills(skills.filter((_, idx) => idx !== i));
 
@@ -59,12 +62,13 @@ const PostInternship = () => {
         skills: validSkills.map((s) => ({
           skillName: s.name,
           weight: parseInt(s.weight),
+          requiredProficiency: parseInt(s.requiredProficiency),
         })),
       });
       toast.success("Internship posted successfully!");
       navigate("/dashboard/recruiter");
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to post internship.");
+      toast.error(getErrorMessage(err, "Failed to post internship."));
     } finally {
       setSaving(false);
     }
@@ -150,6 +154,27 @@ const PostInternship = () => {
                           Weight {v}
                         </SelectItem>
                       ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="w-48 space-y-1">
+                  <Select
+                    value={s.requiredProficiency}
+                    onValueChange={(v) => {
+                      const n = [...skills];
+                      n[i].requiredProficiency = v;
+                      setSkills(n);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Req. Level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">1 - Beginner</SelectItem>
+                      <SelectItem value="2">2 - Basic</SelectItem>
+                      <SelectItem value="3">3 - Intermediate</SelectItem>
+                      <SelectItem value="4">4 - Advanced</SelectItem>
+                      <SelectItem value="5">5 - Expert</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

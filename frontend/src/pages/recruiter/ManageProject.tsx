@@ -28,10 +28,12 @@ import {
   XCircle,
 } from "lucide-react";
 import api from "@/api/axios";
+import { getErrorMessage } from "@/api/axios";
 
 interface SkillWeight {
   name: string;
   weight: string;
+  requiredProficiency: string;
 }
 
 interface PostingData {
@@ -41,7 +43,7 @@ interface PostingData {
   deadline: string;
   location: string | null;
   remote: boolean;
-  postingSkills: { skillName: string; weight: number }[];
+  postingSkills: { skillName: string; weight: number; requiredProficiency: number }[];
 }
 
 interface RankingEntry {
@@ -85,7 +87,8 @@ const ManageProject = () => {
   const [rankLoading, setRankLoading] = useState(false);
   const [appLoading, setAppLoading] = useState(false);
 
-  const addSkill = () => setSkills([...skills, { name: "", weight: "" }]);
+  const addSkill = () =>
+    setSkills([...skills, { name: "", weight: "", requiredProficiency: "3" }]);
   const removeSkill = (i: number) =>
     setSkills(skills.filter((_, idx) => idx !== i));
 
@@ -101,6 +104,7 @@ const ManageProject = () => {
           p.postingSkills.map((s: any) => ({
             name: s.skillName,
             weight: String(s.weight),
+            requiredProficiency: String(s.requiredProficiency),
           })),
         );
         setEditDeadline(p.deadline?.split("T")[0] || "");
@@ -126,7 +130,7 @@ const ManageProject = () => {
       setRankings(res.rankings || []);
       setView("ranking");
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to load rankings.");
+      toast.error(getErrorMessage(err, "Failed to load rankings."));
     } finally {
       setRankLoading(false);
     }
@@ -143,7 +147,7 @@ const ManageProject = () => {
       setAppliedCandidates(res.applications || []);
       setView("applied");
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to load applications.");
+      toast.error(getErrorMessage(err, "Failed to load applications."));
     } finally {
       setAppLoading(false);
     }
@@ -162,6 +166,7 @@ const ManageProject = () => {
         skills: validSkills.map((s) => ({
           skillName: s.name,
           weight: parseInt(s.weight),
+          requiredProficiency: parseInt(s.requiredProficiency),
         })),
       });
       toast.success("Changes saved!");
@@ -169,7 +174,7 @@ const ManageProject = () => {
       const { data: res } = await api.get(`/postings/${id}`);
       setData(res.posting);
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to save changes.");
+      toast.error(getErrorMessage(err, "Failed to save changes."));
     } finally {
       setSaving(false);
     }
@@ -181,7 +186,7 @@ const ManageProject = () => {
       toast.success("Project deleted successfully.");
       navigate("/dashboard/recruiter");
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to delete.");
+      toast.error(getErrorMessage(err, "Failed to delete."));
     }
   };
 
@@ -192,7 +197,7 @@ const ManageProject = () => {
       });
       toast.success(`Notification sent to ${name}!`);
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to send notification.");
+      toast.error(getErrorMessage(err, "Failed to send notification."));
     }
   };
 
@@ -292,7 +297,7 @@ const ManageProject = () => {
             <div className="flex flex-wrap gap-2">
               {data.postingSkills.map((s) => (
                 <Badge key={s.skillName} variant="secondary">
-                  {s.skillName} (w:{s.weight})
+                  {s.skillName} (w:{s.weight}, req:{s.requiredProficiency})
                 </Badge>
               ))}
             </div>
@@ -481,6 +486,27 @@ const ManageProject = () => {
                             Weight {v}
                           </SelectItem>
                         ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="w-48">
+                    <Select
+                      value={s.requiredProficiency}
+                      onValueChange={(v) => {
+                        const n = [...skills];
+                        n[i].requiredProficiency = v;
+                        setSkills(n);
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">1 - Beginner</SelectItem>
+                        <SelectItem value="2">2 - Basic</SelectItem>
+                        <SelectItem value="3">3 - Intermediate</SelectItem>
+                        <SelectItem value="4">4 - Advanced</SelectItem>
+                        <SelectItem value="5">5 - Expert</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

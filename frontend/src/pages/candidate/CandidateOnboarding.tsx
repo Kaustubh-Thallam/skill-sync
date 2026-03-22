@@ -24,6 +24,7 @@ import {
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/api/axios";
+import { getErrorMessage } from "@/api/axios";
 
 interface Skill {
   name: string;
@@ -229,8 +230,7 @@ const CandidateOnboarding = () => {
       }
     } catch (err: any) {
       toast.error(
-        err.response?.data?.error ||
-          "Failed to parse resume. Try manual entry.",
+        getErrorMessage(err, "Failed to parse resume. Try manual entry."),
       );
       // Reset file input so re-upload works
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -291,16 +291,21 @@ const CandidateOnboarding = () => {
       toast.success("Profile setup complete!");
       navigate("/dashboard/candidate");
     } catch (err: any) {
-      const resp = err.response?.data;
-      let msg = "Failed to save profile.";
-      if (resp?.details && Array.isArray(resp.details)) {
-        msg = resp.details
-          .map((d: any) => `${d.field}: ${d.message}`)
-          .join(", ");
-      } else if (resp?.error) {
-        msg = resp.error;
+      // Server/network error check first
+      if (!err.response || err.response.status >= 500) {
+        toast.error(getErrorMessage(err, "Failed to save profile."));
+      } else {
+        const resp = err.response?.data;
+        let msg = "Failed to save profile.";
+        if (resp?.details && Array.isArray(resp.details)) {
+          msg = resp.details
+            .map((d: any) => `${d.field}: ${d.message}`)
+            .join(", ");
+        } else if (resp?.error) {
+          msg = resp.error;
+        }
+        toast.error(msg);
       }
-      toast.error(msg);
     } finally {
       setSaving(false);
     }

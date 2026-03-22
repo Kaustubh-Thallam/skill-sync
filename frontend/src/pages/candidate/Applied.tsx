@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
 import { PostingListSkeleton } from "@/components/skeletons";
 import api from "@/api/axios";
+import { getErrorMessage } from "@/api/axios";
 
 interface ApplicationItem {
   id: string;
@@ -53,7 +54,7 @@ const Applied = () => {
       setApplications((prev) => prev.filter((a) => a.postingId !== postingId));
       toast.success("Application withdrawn successfully.");
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to withdraw.");
+      toast.error(getErrorMessage(err, "Failed to withdraw."));
     }
   };
 

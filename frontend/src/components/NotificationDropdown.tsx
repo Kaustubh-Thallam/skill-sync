@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/popover";
 import { toast } from "sonner";
 import api from "@/api/axios";
+import { getErrorMessage } from "@/api/axios";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface Notification {
@@ -65,7 +66,7 @@ const NotificationDropdown = () => {
         ),
       );
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to accept invitation.");
+      toast.error(getErrorMessage(err, "Failed to accept invitation."));
     } finally {
       setActionLoading(null);
     }
@@ -82,7 +83,7 @@ const NotificationDropdown = () => {
         ),
       );
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to decline invitation.");
+      toast.error(getErrorMessage(err, "Failed to decline invitation."));
     } finally {
       setActionLoading(null);
     }

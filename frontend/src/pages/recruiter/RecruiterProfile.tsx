@@ -16,6 +16,7 @@ import { ProfileSkeleton } from "@/components/skeletons";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/api/axios";
+import { getErrorMessage } from "@/api/axios";
 
 const RecruiterProfile = () => {
   const navigate = useNavigate();
@@ -66,7 +67,7 @@ const RecruiterProfile = () => {
       toast.success("Profile updated successfully!");
       updateUserName(profile.companyName);
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to update profile.");
+      toast.error(getErrorMessage(err, "Failed to update profile."));
     } finally {
       setSaving(false);
     }
@@ -79,7 +80,7 @@ const RecruiterProfile = () => {
       logout();
       navigate("/");
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to delete account.");
+      toast.error(getErrorMessage(err, "Failed to delete account."));
     }
   };
 

@@ -28,6 +28,7 @@ const createPostingSchema = z.object({
       z.object({
         skillName: z.string().min(1).max(50),
         weight: z.number().int().min(1).max(5),
+        requiredProficiency: z.number().int().min(1).max(5).optional().default(3),
       }),
     )
     .min(1, "At least one required skill must be specified"),
@@ -64,6 +65,7 @@ router.post(
           create: data.skills.map((s) => ({
             skillName: s.skillName.toLowerCase().trim(),
             weight: s.weight,
+            requiredProficiency: s.requiredProficiency,
           })),
         },
       },
@@ -180,6 +182,7 @@ router.put(
             postingId: req.params.id,
             skillName: s.skillName.toLowerCase().trim(),
             weight: s.weight,
+            requiredProficiency: s.requiredProficiency,
           })),
         });
         await tx.matchScore.updateMany({

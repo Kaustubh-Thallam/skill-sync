@@ -6,6 +6,7 @@ import Logo from "@/components/Logo";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { ArrowLeft, Loader2 } from "lucide-react";
+import { getErrorMessage } from "@/api/axios";
 
 const Login = () => {
   const { login, isAuthenticated, user } = useAuth();
@@ -41,9 +42,7 @@ const Login = () => {
       }
       toast.success("Welcome back!");
     } catch (err: any) {
-      const msg =
-        err.response?.data?.error || "Invalid credentials. Please try again.";
-      toast.error(msg);
+      toast.error(getErrorMessage(err, "Login failed. Please try again."));
     } finally {
       setLoading(false);
     }

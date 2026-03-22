@@ -90,10 +90,11 @@ model Posting {
 }
 
 model PostingSkill {
-  id        String @id @default(uuid())
-  postingId String
-  skillName String
-  weight    Int    @default(1)
+  id                  String @id @default(uuid())
+  postingId           String
+  skillName           String
+  weight              Int    @default(1)
+  requiredProficiency Int    @default(3)
 
   posting Posting @relation(fields: [postingId], references: [id], onDelete: Cascade)
 

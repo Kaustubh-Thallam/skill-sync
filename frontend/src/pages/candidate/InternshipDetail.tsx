@@ -12,6 +12,7 @@ import {
 import { toast } from "sonner";
 import { DetailPageSkeleton } from "@/components/skeletons";
 import api from "@/api/axios";
+import { getErrorMessage } from "@/api/axios";
 
 const proficiencyLabels: Record<number, string> = {
   1: "Beginner",
@@ -26,7 +27,7 @@ interface PostingData {
   title: string;
   description: string;
   recruiter?: { companyName: string; companySize?: string };
-  postingSkills: { skillName: string; weight: number }[];
+  postingSkills: { skillName: string; weight: number; requiredProficiency: number }[];
   stipend: number | null;
   duration: string | null;
   deadline: string;
@@ -99,7 +100,7 @@ const InternshipDetail = () => {
       });
       setShowScorecard(true);
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to check score.");
+      toast.error(getErrorMessage(err, "Failed to check score."));
     } finally {
       setScoreLoading(false);
     }
@@ -116,7 +117,7 @@ const InternshipDetail = () => {
       setRankings(res.rankings || []);
       setShowRanking(true);
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to load rankings.");
+      toast.error(getErrorMessage(err, "Failed to load rankings."));
     } finally {
       setRankLoading(false);
     }
@@ -129,7 +130,7 @@ const InternshipDetail = () => {
       setApplied(true);
       toast.success("Application submitted!");
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to apply.");
+      toast.error(getErrorMessage(err, "Failed to apply."));
     } finally {
       setApplying(false);
     }

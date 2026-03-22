@@ -135,17 +135,21 @@ npm run dev            # → http://localhost:8080
 ## 🧮 Match Score Algorithm
 
 ```
-Score = (Σ candidate_proficiency × skill_weight) / (Σ 5 × skill_weight) × 100
+Score = (Σ min(candidate_proficiency, required_proficiency) × weight)
+      / (Σ required_proficiency × weight)
+      × 100
 ```
 
-| Required Skill | Weight | Candidate Proficiency | Contribution | Max    |
-| -------------- | ------ | --------------------- | ------------ | ------ |
-| Python         | 5      | 4                     | 20           | 25     |
-| Django         | 4      | 0 (missing)           | 0            | 20     |
-| SQL            | 3      | 3                     | 9            | 15     |
-| **Total**      |        |                       | **29**       | **60** |
+Each posting skill has a **weight** (importance, 1–5) and a **required proficiency** (minimum level, 1–5). A candidate's proficiency is capped at the required level — exceeding it doesn't inflate the score.
 
-**Score = 48%** → Below 80% threshold → Gap guidance provided
+| Required Skill | Weight | Req. Prof. | Candidate Prof. | Contribution | Max    |
+| -------------- | ------ | ---------- | --------------- | ------------ | ------ |
+| Python         | 5      | 4          | 5 → capped 4   | 20           | 20     |
+| Django         | 4      | 3          | 0 (missing)     | 0            | 12     |
+| SQL            | 3      | 3          | 3               | 9            | 9      |
+| **Total**      |        |            |                 | **29**       | **41** |
+
+**Score = 70.7%** → Below 80% threshold → Gap guidance provided
 
 The system also expands skills using a taxonomy (e.g., Flask → Python, React → JavaScript).
 

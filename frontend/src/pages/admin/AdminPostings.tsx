@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import api from "@/api/axios";
+import { getErrorMessage } from "@/api/axios";
 
 interface PostingRow {
   id: string;
@@ -42,7 +43,7 @@ const AdminPostings = () => {
       toast.success("Posting deleted.");
       setPostings(postings.filter((p) => p.id !== deleteTarget));
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to delete posting.");
+      toast.error(getErrorMessage(err, "Failed to delete posting."));
     }
     setDeleteTarget(null);
   };

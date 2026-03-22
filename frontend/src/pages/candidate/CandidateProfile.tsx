@@ -26,6 +26,7 @@ import { ProfileSkeleton } from "@/components/skeletons";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/api/axios";
+import { getErrorMessage } from "@/api/axios";
 
 const proficiencyLabels: Record<string, string> = {
   "1": "Beginner",
@@ -226,7 +227,7 @@ const CandidateProfile = () => {
 
       toast.success("Resume parsed! Details updated. Review and click Save.");
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to parse resume.");
+      toast.error(getErrorMessage(err, "Failed to parse resume."));
     } finally {
       setResumeUploading(false);
       // Reset file input so same file can be selected again
@@ -241,7 +242,7 @@ const CandidateProfile = () => {
       logout();
       navigate("/");
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to delete account.");
+      toast.error(getErrorMessage(err, "Failed to delete account."));
     }
   };
 

@@ -32,4 +32,28 @@ api.interceptors.response.use(
   },
 );
 
+const SERVER_DOWN_MSG =
+  "Server is down, please try again after a few minutes.";
+
+/**
+ * Extract a user-friendly error message from an Axios error.
+ * - Network error / no response → server down message
+ * - 5xx status → server down message
+ * - 4xx status → API error message from response body
+ * - Fallback → provided default message
+ */
+export function getErrorMessage(err: any, fallback: string): string {
+  // Network error — server is unreachable
+  if (!err.response) {
+    return SERVER_DOWN_MSG;
+  }
+  // Server error (5xx)
+  const status = err.response.status;
+  if (status >= 500) {
+    return SERVER_DOWN_MSG;
+  }
+  // Application error (4xx) — use API message or fallback
+  return err.response?.data?.error || fallback;
+}
+
 export default api;
