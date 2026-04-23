@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { getErrorMessage } from "@/api/axios";
+import { getCookie } from "@/utils/cookies";
 
 const Login = () => {
   const { login, isAuthenticated, user } = useAuth();
@@ -31,7 +32,7 @@ const Login = () => {
     setLoading(true);
     try {
       await login(email, password);
-      const stored = localStorage.getItem("user");
+      const stored = getCookie("user");
       const u = stored ? JSON.parse(stored) : null;
       if (u?.userType === "admin") {
         navigate("/dashboard/admin");

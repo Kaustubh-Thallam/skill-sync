@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getCookie, removeCookie } from "@/utils/cookies";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000",
@@ -6,7 +7,7 @@ const api = axios.create({
 
 // Attach JWT token to every request if it exists
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = getCookie("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -18,8 +19,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      removeCookie("token");
+      removeCookie("user");
       // Only redirect if not already on auth pages
       if (
         !window.location.pathname.startsWith("/login") &&

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import api from "@/api/axios";
+import { setCookie, getCookie, removeCookie } from "@/utils/cookies";
 
 interface User {
   id: string;
@@ -40,11 +41,11 @@ function mapRole(role: string): "candidate" | "recruiter" | "admin" {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(() => {
-    const stored = localStorage.getItem("user");
+    const stored = getCookie("user");
     return stored ? JSON.parse(stored) : null;
   });
   const [token, setToken] = useState<string | null>(() =>
-    localStorage.getItem("token"),
+    getCookie("token"),
   );
 
   const isAuthenticated = !!token && !!user;
@@ -60,8 +61,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
     setUser(mappedUser);
     setToken(data.token);
-    localStorage.setItem("user", JSON.stringify(mappedUser));
-    localStorage.setItem("token", data.token);
+    setCookie("user", JSON.stringify(mappedUser));
+    setCookie("token", data.token);
   };
 
   const signup = async (
@@ -81,15 +82,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
     setUser(mappedUser);
     setToken(data.token);
-    localStorage.setItem("user", JSON.stringify(mappedUser));
-    localStorage.setItem("token", data.token);
+    setCookie("user", JSON.stringify(mappedUser));
+    setCookie("token", data.token);
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+    removeCookie("user");
+    removeCookie("token");
   };
 
   /** Update the user's display name (called after onboarding or profile fetch) */
@@ -97,7 +98,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser((prev) => {
       if (!prev) return prev;
       const updated = { ...prev, fullName: name };
-      localStorage.setItem("user", JSON.stringify(updated));
+      setCookie("user", JSON.stringify(updated));
       return updated;
     });
   };
@@ -107,7 +108,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser((prev) => {
       if (!prev) return prev;
       const updated = { ...prev, onboarded: val };
-      localStorage.setItem("user", JSON.stringify(updated));
+      setCookie("user", JSON.stringify(updated));
       return updated;
     });
   };

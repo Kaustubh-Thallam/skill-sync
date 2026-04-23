@@ -42,7 +42,7 @@ const CandidateDashboard = () => {
         setNoSkills(recsRes.data.noSkills || false);
         setSkillCount(profileRes.data.profile?.skills?.length || 0);
 
-        // Update sidebar name from profile (fixes stale localStorage)
+        // Update sidebar name from profile (fixes stale cookie data)
         const profileName = profileRes.data.profile?.name;
         if (profileName) updateUserName(profileName);
       } catch {
