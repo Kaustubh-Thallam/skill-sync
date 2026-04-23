@@ -12,6 +12,7 @@ import Landing from "@/pages/Landing";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import NotFound from "@/pages/NotFound";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
 
 // Candidate pages
 import CandidateOnboarding from "@/pages/candidate/CandidateOnboarding";
@@ -56,6 +57,7 @@ const App = () => (
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
 
             {/* Candidate Protected Routes */}
             <Route

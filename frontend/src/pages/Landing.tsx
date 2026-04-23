@@ -295,8 +295,13 @@ const Landing = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-retro-charcoal/10 bg-retro-cream py-6 text-center text-sm text-retro-brown">
-        © 2026 SkillSync. All rights reserved.
+      <footer className="border-t border-retro-charcoal/10 bg-retro-cream py-6 text-center text-sm text-retro-brown space-y-1">
+        <div>© 2026 SkillSync. All rights reserved.</div>
+        <div>
+          <Link to="/privacy" className="text-retro-olive font-medium hover:underline">
+            Privacy Policy
+          </Link>
+        </div>
       </footer>
     </div>
   );
