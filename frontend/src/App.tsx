@@ -13,6 +13,11 @@ import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import NotFound from "@/pages/NotFound";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import About from "@/pages/About";
+import FAQ from "@/pages/FAQ";
+import Blog from "@/pages/Blog";
+import Contact from "@/pages/Contact";
+import Terms from "@/pages/Terms";
 
 // Candidate pages
 import CandidateOnboarding from "@/pages/candidate/CandidateOnboarding";
@@ -58,6 +63,11 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/terms" element={<Terms />} />
 
             {/* Candidate Protected Routes */}
             <Route

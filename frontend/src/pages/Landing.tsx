@@ -295,13 +295,16 @@ const Landing = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-retro-charcoal/10 bg-retro-cream py-6 text-center text-sm text-retro-brown space-y-1">
-        <div>© 2026 SkillSync. All rights reserved.</div>
-        <div>
-          <Link to="/privacy" className="text-retro-olive font-medium hover:underline">
-            Privacy Policy
-          </Link>
+      <footer className="border-t border-retro-charcoal/10 bg-retro-cream py-8 text-center text-sm text-retro-brown space-y-3">
+        <div className="flex justify-center gap-4 flex-wrap px-4">
+          <Link to="/about" className="text-retro-olive font-medium hover:underline">About</Link>
+          <Link to="/blog" className="text-retro-olive font-medium hover:underline">Blog</Link>
+          <Link to="/faq" className="text-retro-olive font-medium hover:underline">FAQ</Link>
+          <Link to="/contact" className="text-retro-olive font-medium hover:underline">Contact</Link>
+          <Link to="/privacy" className="text-retro-olive font-medium hover:underline">Privacy Policy</Link>
+          <Link to="/terms" className="text-retro-olive font-medium hover:underline">Terms of Service</Link>
         </div>
+        <div>© 2026 SkillSync. All rights reserved.</div>
       </footer>
     </div>
   );
